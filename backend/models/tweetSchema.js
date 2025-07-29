@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+// Defines tweet structure
 const tweetSchema = new mongoose.Schema(
   {
     description: {
@@ -11,8 +11,8 @@ const tweetSchema = new mongoose.Schema(
       default: [],
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: mongoose.Schema.Types.ObjectId, // References the User model (creates a relationship)
+      ref: "User", // Links to the User collection
     },
     bookmarks: {
       type: Array,

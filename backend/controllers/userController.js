@@ -1,7 +1,7 @@
-import { user } from "../models/userSchema";
+import { user } from "../models/userSchema.js";
 import bcryptjs from "bcryptjs";
 
-export const Register = async () => {
+export const Register = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
     //basic validation
@@ -11,8 +11,8 @@ export const Register = async () => {
         success: false,
       });
     }
-    const user = await User.findOne(email);
-    if (user) {
+    const existingUser = await user.findOne({ email });
+    if (existingUser) {
       return res.status(401).json({
         message: "email already in use",
         success: false,
@@ -20,8 +20,10 @@ export const Register = async () => {
     }
 
     const hashedPassword = await bcryptjs.hash(password, 16);
+    //                       Securely hashes passwords
 
-    await User.create({
+    await user.create({
+      // Saves new user to database
       name,
       username,
       email,
@@ -29,12 +31,15 @@ export const Register = async () => {
     });
 
     return res.status(201).json({
+      // Sends response back to client
       message: "Account created successfully.",
       success: true,
     });
   } catch (error) {
-    {
-      console.log(error);
-    }
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
   }
 };

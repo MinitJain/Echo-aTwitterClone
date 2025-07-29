@@ -1,15 +1,16 @@
 import mongoose from "mongoose";
 
+// Defines the structure of user data in your database
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: true, // means Field must be provided
     },
     username: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, // means No two users can have the same value
     },
     email: {
       type: String,
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema(
     },
     followers: {
       type: Array,
-      default: [],
+      default: [], //If value (followers in this case) not provided, defaults to empty array
     },
     following: {
       type: Array,
