@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import databaseConnection from "./config/database.js";
 import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute.js";
+import tweetRoute from "./routes/tweetRoute.js";
 import cors from "cors";
 
 dotenv.config({
@@ -24,6 +25,7 @@ app.use(cors()); // Enable CORS
 
 //api
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/tweet", tweetRoute);
 
 app.get("/home", (req, res) => {
   res.status(200).json({
