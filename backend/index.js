@@ -22,8 +22,9 @@ app.use(cookieParser()); // Parses cookies
 
 //api
 app.use("/api/v1/user", userRoute);
+//localhost:8080/api/v1/user/register
 
-app.get("/home", (req, res) => {
+http: app.get("/home", (req, res) => {
   res.status(200).json({
     message: "coming from backend..",
   });

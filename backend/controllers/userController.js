@@ -1,42 +1,56 @@
 import { user } from "../models/userSchema.js";
 import bcryptjs from "bcryptjs";
 
+// Register Controller
 export const Register = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
-    //basic validation
+
+    // Basic field validation
     if (!name || !username || !email || !password) {
-      return res.status(401).json({
+      console.log("Missing Fields:", name, username, email, password);
+      return res.status(400).json({
         message: "All fields are required.",
         success: false,
       });
     }
-    const existingUser = await user.findOne({ email });
+
+    // Check if email already exists
+    const existingUser = await user.findOne({ email }).lean();
     if (existingUser) {
-      return res.status(401).json({
-        message: "email already in use",
+      return res.status(400).json({
+        message: "Email already in use.",
         success: false,
       });
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 16);
-    //                       Securely hashes passwords
+    // Check if username already exists
+    const existingUsername = await user.findOne({ username }).lean();
+    if (existingUsername) {
+      return res.status(400).json({
+        message: "Username already in use.",
+        success: false,
+      });
+    }
 
+    // Hash the password securely
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    // Create and save the new user
     await user.create({
-      // Saves new user to database
       name,
       username,
       email,
       password: hashedPassword,
     });
 
+    // Success response
     return res.status(201).json({
-      // Sends response back to client
       message: "Account created successfully.",
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Registration Error:", error);
     return res.status(500).json({
       message: "Internal server error",
       success: false,
