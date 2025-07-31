@@ -4,5 +4,6 @@ import isAuthenticated from "../config/auth.js";
 
 const router = express.Router();
 router.post("/create", isAuthenticated, createTweet);
+router.delete("/delete/:id", deleteTweet);
 
 export default router;
