@@ -119,3 +119,13 @@ export const Login = async (req, res) => {
     });
   }
 };
+
+export const logout = async (req, res) => {
+  return res
+    .cookie("token", "", { expiresIn: new Date(Date.now()) })
+    .status(200)
+    .json({
+      message: "Logged out successfully",
+      success: true,
+    });
+};
