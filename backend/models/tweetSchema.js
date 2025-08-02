@@ -14,10 +14,6 @@ const tweetSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId, // References the User model (creates a relationship)
       ref: "User", // Links to the User collection
     },
-    bookmarks: {
-      type: Array,
-      default: [],
-    },
     followers: {
       type: Array,
       default: [],

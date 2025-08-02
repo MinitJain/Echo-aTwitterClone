@@ -1,4 +1,5 @@
-import { user } from "../models/userSchema.js";
+import { User } from "../models/userSchema.js";
+import { Tweet } from "../models/tweetSchema.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -17,7 +18,7 @@ export const Register = async (req, res) => {
     }
 
     // Check if email already exists
-    const existingUser = await user.findOne({ email }).lean();
+    const existingUser = await User.findOne({ email }).lean();
     if (existingUser) {
       return res.status(400).json({
         message: "Email already in use.",
@@ -26,7 +27,7 @@ export const Register = async (req, res) => {
     }
 
     // Check if username already exists
-    const existingUsername = await user.findOne({ username }).lean();
+    const existingUsername = await User.findOne({ username }).lean();
     if (existingUsername) {
       return res.status(400).json({
         message: "Username already in use.",
@@ -38,7 +39,7 @@ export const Register = async (req, res) => {
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     // Create and save the new user
-    await user.create({
+    await User.create({
       name,
       username,
       email,
@@ -73,7 +74,7 @@ export const Login = async (req, res) => {
     }
 
     // Find user by email
-    const existingUser = await user.findOne({ email }).lean();
+    const existingUser = await User.findOne({ email }).lean();
     if (!existingUser) {
       return res.status(400).json({
         message: "Invalid email or password.",
@@ -121,11 +122,60 @@ export const Login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
+  // Clear the token cookie
   return res
-    .cookie("token", "", { expiresIn: new Date(Date.now()) })
+    .cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0), // Expire it immediately
+    })
     .status(200)
     .json({
       message: "Logged out successfully",
       success: true,
     });
+};
+
+export const bookmark = async (req, res) => {
+  try {
+    const LoggedInUserId = req.body.id;
+    const tweetId = req.params.id;
+
+    const foundUser = await User.findById(LoggedInUserId);
+
+    // If user doesn't exist
+    if (!foundUser) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    // If tweet is already bookmarked, remove it
+    if (foundUser.bookmarks.includes(tweetId)) {
+      await User.findByIdAndUpdate(LoggedInUserId, {
+        $pull: { bookmarks: tweetId },
+      });
+
+      return res.status(200).json({
+        message: "Bookmark removed successfully.",
+        success: true,
+      });
+    } else {
+      // If tweet is not bookmarked, add it
+      await User.findByIdAndUpdate(LoggedInUserId, {
+        $push: { bookmarks: tweetId },
+      });
+
+      return res.status(200).json({
+        message: "Bookmark added successfully.",
+        success: true,
+      });
+    }
+  } catch (error) {
+    console.log("Bookmark Error:", error);
+    return res.status(500).json({
+      message: "Error in saving bookmarks.",
+      success: false,
+    });
+  }
 };
