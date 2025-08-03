@@ -259,3 +259,42 @@ export const follow = async (req, res) => {
     });
   }
 };
+
+export const unfollow = async (req, res) => {
+  try {
+    const LoggedInUserId = req.body.id;
+    const userIdToFollow = req.params.id;
+
+    const loggedInUser = await User.findById(LoggedInUserId);
+    const userToUnfollow = await User.findById(userIdToFollow);
+
+    if (!loggedInUser || !userToUnfollow) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    // Check if already following
+    if (!loggedInUser.following.includes(userIdToFollow)) {
+      return res.status(400).json({
+        message: "You have alerady unfollowed this user.",
+        success: false,
+      });
+    }
+
+    await userToUnfollow.updateOne({ $pull: { followers: LoggedInUserId } });
+    await loggedInUser.updateOne({ $pull: { following: userIdToFollow } });
+
+    return res.status(200).json({
+      message: `${loggedInUser.name} has unfollowed ${userToUnfollow.name}`,
+      success: true,
+    });
+  } catch (error) {
+    console.log("UnFollow Error:", error);
+    return res.status(500).json({
+      message: "Error unfollowing user.",
+      success: false,
+    });
+  }
+};
