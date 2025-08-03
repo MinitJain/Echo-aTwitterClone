@@ -179,3 +179,83 @@ export const bookmark = async (req, res) => {
     });
   }
 };
+
+export const GetUserProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId).select("-password").lean();
+    return res.status(200).json({
+      message: "User profile fetched successfully.",
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log("GetUserProfile Error:", error);
+    return res.status(500).json({
+      message: "Error fetching user profile.",
+      success: false,
+    });
+  }
+};
+
+export const getOtherUserProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const OtherUser = await User.find({ _id: { $ne: id } }).select("-password");
+    if (!OtherUser) {
+      return res.status(404).json({
+        message: "Cannot find other at the moment.",
+        success: false,
+      });
+    }
+    return res.status(200).json({
+      OtherUser,
+    });
+  } catch (error) {
+    console.log("getOtherUserProfile Error:", error);
+    return res.status(500).json({
+      message: "Error fetching other user profile.",
+      success: false,
+    });
+  }
+};
+
+export const follow = async (req, res) => {
+  try {
+    const LoggedInUserId = req.body.id;
+    const userIdToFollow = req.params.id;
+
+    const loggedInUser = await User.findById(LoggedInUserId);
+    const userToFollow = await User.findById(userIdToFollow);
+
+    if (!loggedInUser || !userToFollow) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    // Check if already following
+    if (userToFollow.followers.includes(LoggedInUserId)) {
+      return res.status(400).json({
+        message: "You are already following this user.",
+        success: false,
+      });
+    }
+
+    // Push follower/following
+    await userToFollow.updateOne({ $push: { followers: LoggedInUserId } });
+    await loggedInUser.updateOne({ $push: { following: userIdToFollow } });
+
+    return res.status(200).json({
+      message: `${loggedInUser.name} has followed ${userToFollow.name}`,
+      success: true,
+    });
+  } catch (error) {
+    console.log("Follow Error:", error);
+    return res.status(500).json({
+      message: "Error following user.",
+      success: false,
+    });
+  }
+};

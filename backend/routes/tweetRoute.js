@@ -11,4 +11,5 @@ const router = express.Router();
 router.post("/create", isAuthenticated, createTweet);
 router.delete("/delete/:id", isAuthenticated, deleteTweet);
 router.put("/like/:id", isAuthenticated, likeorDislikeTweet);
+
 export default router;
