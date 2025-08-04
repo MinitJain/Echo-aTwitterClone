@@ -1,5 +1,6 @@
-import express from "express";
+import { User } from "../models/userSchema.js";
 import { Tweet } from "../models/tweetSchema.js";
+import { getOtherUserProfile } from "./userController.js";
 
 export const createTweet = async (req, res) => {
   try {
@@ -79,6 +80,39 @@ export const likeorDislikeTweet = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       message: "Something went wrong while liking or disliking the tweet.",
+      success: false,
+    });
+  }
+};
+export const getAllTweets = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const loggedInUser = await User.findById(id);
+    if (!loggedInUser) {
+      return res.status(404).json({
+        message: "Logged-in user not found.",
+        success: false,
+      });
+    }
+
+    const loggedInUserTweets = await Tweet.find({ userId: id });
+
+    const followingUsersTweets = await Promise.all(
+      loggedInUser.following.map(async (followedUserId) => {
+        return await Tweet.find({ userId: followedUserId });
+      })
+    );
+
+    return res.status(200).json({
+      message: "All tweets fetched successfully.",
+      success: true,
+      tweets: [...loggedInUserTweets, ...followingUsersTweets.flat()],
+    });
+  } catch (error) {
+    console.log("GetAllTweets Error:", error);
+    return res.status(500).json({
+      message: "Error in fetching tweets.",
       success: false,
     });
   }

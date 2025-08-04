@@ -20,4 +20,5 @@ router.route("/profile/:id").get(isAuthenticated, GetUserProfile);
 router.get("/otherusers/:id", isAuthenticated, getOtherUserProfile);
 router.post("/follow/:id", isAuthenticated, follow);
 router.post("/unfollow/:id", isAuthenticated, unfollow);
+
 export default router;

@@ -1,6 +1,8 @@
+//auth.js — Authentication Middleware using JWT
+
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
+// import cookieParser from "cookie-parser";
 
 dotenv.config(); // No need for { path }, // This loads from .env automatically,
 
