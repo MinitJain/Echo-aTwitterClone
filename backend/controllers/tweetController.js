@@ -117,3 +117,36 @@ export const getAllTweets = async (req, res) => {
     });
   }
 };
+
+export const getFollowingTweets = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const loggedInUser = await User.findById(id);
+    if (!loggedInUser) {
+      return res.status(404).json({
+        message: "Logged-in user not found.",
+        success: false,
+      });
+    }
+
+    const followingUsersTweets = await Promise.all(
+      //If you just loop with forEach() or map() without Promise.all, your code won’t wait for the async DB calls (Tweet.find(...)) to finish before moving on.
+      loggedInUser.following.map(async (followedUserId) => {
+        return await Tweet.find({ userId: followedUserId });
+      })
+    );
+
+    return res.status(200).json({
+      message: "All tweets fetched successfully.",
+      success: true,
+      tweets: followingUsersTweets.flat(),
+    });
+  } catch (error) {
+    console.log("getFollowingTweets Error:", error);
+    return res.status(500).json({
+      message: "Error in fetching following tweets.",
+      success: false,
+    });
+  }
+};
