@@ -1,4 +1,4 @@
-# Twitter Clone (MERN Stack)
+# ECHO - a microblogging app 
 
 🚧 **This project is currently in development. Features and structure may change.** 🚧
 
