@@ -27,11 +27,11 @@ const userSchema = new mongoose.Schema(
     },
     following: {
       type: Array,
-      default: [],
+      default: [], //If value not provided, defaults to empty array
     },
     bookmarks: {
       type: Array,
-      default: [],
+      default: [], //If value not provided, defaults to empty array
     },
   },
   { timestamps: true }
