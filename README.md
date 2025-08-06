@@ -1,61 +1,55 @@
-# ECHO - a microblogging app 
+ECHO - a microblogging app
+🎯 "Amplify your voice, spark conversations"
+🔊 "Where your voice echoes across the digital world"
+🚧 This project is currently in development. Features and structure may change. 🚧
+A full-stack Twitter clone built using the MERN stack (MongoDB, Express, React, Node.js), featuring authentication, tweeting, and user management functionalities.
 
-🚧 **This project is currently in development. Features and structure may change.** 🚧
+🚀 Features
 
-A full-stack Twitter clone built using the **MERN stack** (MongoDB, Express, React, Node.js), featuring authentication, tweeting, and user management functionalities.
+🔐 User Authentication (JWT-based)
+📝 Post Tweets
+🧵 View All Tweets (Global Feed)
+👤 User Profile Pages
+❤️ Like Tweets (optional)
+🔍 Responsive UI with React
+💾 MongoDB for data persistence
+🛠️ RESTful API with Express.js
 
----
 
-## 🚀 Features
+🧰 Tech Stack
+Frontend:
 
-- 🔐 User Authentication (JWT-based)
-- 📝 Post Tweets
-- 🧵 View All Tweets (Global Feed)
-- 👤 User Profile Pages
-- ❤️ Like Tweets (optional)
-- 🔍 Responsive UI with React
-- 💾 MongoDB for data persistence
-- 🛠️ RESTful API with Express.js
+React.js (with Hooks)
+React Router
+Axios
+Tailwind CSS / CSS Modules (if used)
 
----
+Backend:
 
-## 🧰 Tech Stack
+Node.js
+Express.js
+MongoDB + Mongoose
+JSON Web Token (JWT)
+bcrypt.js (for password hashing)
 
-### Frontend:
 
-- React.js (with Hooks)
-- React Router
-- Axios
-- Tailwind CSS / CSS Modules (if used)
-
-### Backend:
-
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-- JSON Web Token (JWT)
-- bcrypt.js (for password hashing)
-
----
-
-## 📁 Project Structure
-
+📁 Project Structure
 my-twitter-clone/
 │
-├── backend/ # Express API
-│ ├── models/ # Mongoose Schemas
-│ ├── routes/ # Express Routes
-│ ├── controllers/ # Request Handlers
-│ ├── config/ # DB & auth config
-│ └── index.js # App Entry Point
+├── backend/                 # Express API
+│   ├── models/             # Mongoose Schemas
+│   ├── routes/             # Express Routes
+│   ├── controllers/        # Request Handlers
+│   ├── config/             # DB & auth config
+│   └── index.js            # App Entry Point
 │
-├── frontend/ # React App
-│ ├── src/
-│ │ ├── components/
-│ │ ├── pages/
-│ │ └── App.js
-│ └── public/
+├── frontend/               # React App
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── App.js
+│   └── public/
 │
 ├── .gitignore
-├── package.json ( root-level dependencies)
+├── package.json           # root-level dependencies
 └── README.md
