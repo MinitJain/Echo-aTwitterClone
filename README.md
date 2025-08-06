@@ -40,4 +40,22 @@ A full-stack Twitter clone built using the **MERN stack** (MongoDB, Express, Rea
 ---
 
 ## 📁 Project Structure
-
+my-twitter-clone/
+│
+├── backend/ # Express API
+│ ├── models/ # Mongoose Schemas
+│ ├── routes/ # Express Routes
+│ ├── controllers/ # Request Handlers
+│ ├── config/ # DB & auth config
+│ └── index.js # App Entry Point
+│
+├── frontend/ # React App
+│ ├── src/
+│ │ ├── components/
+│ │ ├── pages/
+│ │ └── App.js
+│ └── public/
+│
+├── .gitignore
+├── package.json # root-level dependencies
+└── README.md
