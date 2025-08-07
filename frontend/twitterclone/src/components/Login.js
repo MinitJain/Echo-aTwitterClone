@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { USER_API_END_POINT } from "../utils/constant.js";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: "", // const [name, setName] = useState("");
+    username: "", // const [username, setUsername] = useState("");
+    email: "", // const [email, setEmail] = useState("");
+    password: "", // const [password, setPassword] = useState("");
+    confirmPassword: "", // const [confirmPassword, setConfirmPassword] = useState("");
   });
 
   const handleToggle = () => {
@@ -26,15 +28,39 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const { name, email, username, password, confirmPassword } = formData;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isLogin) {
+      try {
+        const res = await axios.post(`${USER_API_END_POINT}/login`, {
+          email,
+          password,
+        });
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const res = await axios.post(`${USER_API_END_POINT}/register`, {
+          name,
+          email,
+          username,
+          password,
+          confirmPassword,
+        });
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     if (!isLogin && formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-
-    console.log("Submitted Data:", formData);
   };
 
   return (
