@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { USER_API_END_POINT } from "../utils/constant.js";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -13,6 +14,8 @@ const Login = () => {
     password: "", // const [password, setPassword] = useState("");
     confirmPassword: "", // const [confirmPassword, setConfirmPassword] = useState("");
   });
+
+  const navigate = useNavigate();
 
   const handleToggle = () => {
     setIsLogin(!isLogin);
@@ -40,6 +43,7 @@ const Login = () => {
     }
 
     if (isLogin) {
+      //login
       try {
         const res = await axios.post(
           `${USER_API_END_POINT}/login`,
@@ -54,8 +58,8 @@ const Login = () => {
             withCredentials: true, // ✅ added this line for login too
           }
         );
-        console.log(res);
 
+        navigate("/");
         if (res.data.success) {
           toast.success(res.data.message);
         }
@@ -82,8 +86,9 @@ const Login = () => {
             withCredentials: true,
           }
         );
-        console.log(res);
+
         if (res.data.success) {
+          setIsLogin(true);
           toast.success(res.data.message);
         }
       } catch (error) {
