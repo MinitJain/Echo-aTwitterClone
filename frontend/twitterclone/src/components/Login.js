@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { USER_API_END_POINT } from "../utils/constant.js";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -32,34 +33,63 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+
     if (isLogin) {
       try {
-        const res = await axios.post(`${USER_API_END_POINT}/login`, {
-          email,
-          password,
-        });
+        const res = await axios.post(
+          `${USER_API_END_POINT}/login`,
+          {
+            email,
+            password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true, // ✅ added this line for login too
+          }
+        );
         console.log(res);
+
+        if (res.data.success) {
+          toast.success(res.data.message);
+        }
       } catch (error) {
+        toast.error(error?.response?.data?.message || "Login failed");
         console.log(error);
       }
     } else {
+      // sign up
       try {
-        const res = await axios.post(`${USER_API_END_POINT}/register`, {
-          name,
-          email,
-          username,
-          password,
-          confirmPassword,
-        });
+        const res = await axios.post(
+          `${USER_API_END_POINT}/register`,
+          {
+            name,
+            email,
+            username,
+            password,
+            confirmPassword,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
         console.log(res);
+        if (res.data.success) {
+          toast.success(res.data.message);
+        }
       } catch (error) {
+        toast.error(error?.response?.data?.message || "Registration failed");
         console.log(error);
       }
-    }
-
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
     }
   };
 

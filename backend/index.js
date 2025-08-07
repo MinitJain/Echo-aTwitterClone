@@ -26,7 +26,12 @@ const corsOptions = {
   origin: "http://localhost:3000",
   Credentials: true,
 };
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "http://localhost:3000", //  frontend origin
+    credentials: true, // allow cookies
+  })
+);
 
 //api
 app.use("/api/v1/user", userRoute);
