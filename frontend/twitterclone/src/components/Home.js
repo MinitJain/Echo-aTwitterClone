@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className="Home flex justify-between max-w-7xl w-[90%] mx-auto">
+    <div className="Home  flex justify-between max-w-7xl w-[90%] mx-auto ">
       <LeftSidebar />
       <Outlet />
       <RightSideBar />

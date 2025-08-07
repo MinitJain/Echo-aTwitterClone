@@ -4,7 +4,7 @@ import { CiImageOn } from "react-icons/ci";
 
 const CreatePost = () => {
   return (
-    <div className="w-[100%]">
+    <div className="w-[100%] ">
       <div className="">
         <div className="flex justify-evenly  items-center border-b border-gray-200 ">
           <div className="cursor-pointer w-full text-center px-4 py-3 hover:bg-gray-100 p-2 rounded-lg">

@@ -4,7 +4,7 @@ import Tweet from "./Tweet";
 
 const Feed = () => {
   return (
-    <div className="w-[50%] border">
+    <div className="w-[50%] border ">
       <div>
         <CreatePost />
         <Tweet />

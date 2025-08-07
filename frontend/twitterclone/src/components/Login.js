@@ -38,7 +38,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-200 via-gray-700 to-gray-900 ">
+    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-gray-400 to-gray-100 ">
       <div className="bg-gray-200 shadow-2xl border border-gray-200/50 rounded-2xl p-12 flex flex-col items-center w-full max-w-md">
         <img
           src="/NodesLogoForEcho.png"
