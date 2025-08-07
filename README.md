@@ -1,4 +1,7 @@
-# Twitter Clone (MERN Stack)
+# ECHO – A Microblogging App
+
+🎯 *Amplify your voice, spark conversations*  
+🔊 *Where your voice echoes across the digital world*
 
 🚧 **This project is currently in development. Features and structure may change.** 🚧
 
@@ -22,14 +25,12 @@ A full-stack Twitter clone built using the **MERN stack** (MongoDB, Express, Rea
 ## 🧰 Tech Stack
 
 ### Frontend:
-
 - React.js (with Hooks)
 - React Router
 - Axios
 - Tailwind CSS / CSS Modules (if used)
 
 ### Backend:
-
 - Node.js
 - Express.js
 - MongoDB + Mongoose
@@ -39,7 +40,6 @@ A full-stack Twitter clone built using the **MERN stack** (MongoDB, Express, Rea
 ---
 
 ## 📁 Project Structure
-
 my-twitter-clone/
 │
 ├── backend/ # Express API
@@ -57,5 +57,5 @@ my-twitter-clone/
 │ └── public/
 │
 ├── .gitignore
-├── package.json ( root-level dependencies)
+├── package.json # root-level dependencies
 └── README.md
