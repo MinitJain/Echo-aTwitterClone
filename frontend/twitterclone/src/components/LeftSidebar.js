@@ -15,10 +15,10 @@ const LeftSidebar = () => {
       <div>
         <div>
           <img
-            width={"100px"}
+            width={"80px"}
             src="/ZoomedLogo.png"
             alt="Logo"
-            className="logo"
+            className="logo mt-4 "
           />
         </div>
         <div className="my-4">

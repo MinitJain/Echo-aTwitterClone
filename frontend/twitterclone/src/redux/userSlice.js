@@ -6,8 +6,8 @@ const userSlice = createSlice({
     user: null,
     otherUsers: null,
   },
-  reduucers: {
-    //muultiple actions
+  reducers: {
+    //multiple actions
     getUser: (state, action) => {
       state.user = action.payload;
     },

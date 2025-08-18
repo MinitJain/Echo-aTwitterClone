@@ -101,6 +101,13 @@ export const Login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
+    const { password: _, ...userWithoutPassword } = existingUser;
+
+    // re-map _id -> id
+    const user = {
+      ...userWithoutPassword,
+      id: existingUser._id.toString(),
+    };
     // Send token in cookie with correct expiry
     return res
       .status(200)
@@ -109,8 +116,9 @@ export const Login = async (req, res) => {
         maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
       })
       .json({
-        message: `Welcome back! ${existingUser.name}`,
+        message: `Welcome back! ${user.name}`,
         success: true,
+        user,
       });
   } catch (error) {
     console.error("Login Error:", error);

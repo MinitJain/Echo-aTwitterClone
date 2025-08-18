@@ -3,6 +3,8 @@ import axios from "axios";
 import { USER_API_END_POINT } from "../utils/constant.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getUser } from "../redux/userSlice.js";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -16,6 +18,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleToggle = () => {
     setIsLogin(!isLogin);
@@ -59,7 +62,11 @@ const Login = () => {
           }
         );
 
+        dispatch(getUser(res?.data?.user));
+        // localStorage.setItem("userId", res?.data?.user?.id);
+
         navigate("/");
+
         if (res.data.success) {
           toast.success(res.data.message);
         }
@@ -99,7 +106,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-gray-400 to-gray-100 ">
+    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-400 to-gray-900 ">
       <div className="bg-gray-200 shadow-2xl border border-gray-200/50 rounded-2xl p-12 flex flex-col items-center w-full max-w-md">
         <img
           src="/NodesLogoForEcho.png"
