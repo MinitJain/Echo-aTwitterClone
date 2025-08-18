@@ -61,7 +61,8 @@ const Login = () => {
             withCredentials: true, // ✅ added this line for login too
           }
         );
-
+        console.log("Full Login Response:", res);
+        console.log("Login API Response:", res.data);
         dispatch(getUser(res?.data?.user));
         // localStorage.setItem("userId", res?.data?.user?.id);
 
