@@ -63,12 +63,12 @@ const Login = () => {
         );
         console.log("Full Login Response:", res);
         console.log("Login API Response:", res.data);
-        dispatch(getUser(res?.data?.user));
-        // localStorage.setItem("userId", res?.data?.user?.id);
-
-        navigate("/");
 
         if (res.data.success) {
+          dispatch(getUser(res?.data?.user));
+          localStorage.setItem("user", JSON.stringify(res?.data?.user));
+          navigate("/");
+
           toast.success(res.data.message);
         }
       } catch (error) {

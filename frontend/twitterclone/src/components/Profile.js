@@ -1,28 +1,31 @@
-import React from "react";
 import Avatar from "react-avatar";
 import { IoMdArrowBack } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import useGetProfile from "../Hooks/useGetProfile";
 
 const Profile = () => {
+  const { id } = useParams(); // URL param (if any)
   const { user, profile } = useSelector((store) => store.user);
 
-  // Debug logs
-  console.log("User from Redux:", user);
-  console.log("Profile from Redux:", profile);
+  // If there's an `id` in the URL, show that profile; else show logged-in user's profile
+  const userId = id || user?._id;
 
-  // Always call the hook (this will fetch + dispatch inside hook)
-  useGetProfile(user?._id);
+  // Debug
+  console.log("Profile route ID:", id);
+  console.log("Using userId:", userId);
 
-  // Optional loading UI
-  // if (!profile) {
-  //   return (
-  //     <div className="w-[50%] border-l border-r border-gray-200 flex items-center justify-center">
-  //       <p className="text-gray-500">Loading profile...</p>
-  //     </div>
-  //   );
-  // }
+  // Fetch profile data
+  useGetProfile(userId);
+
+  // Optional loading state
+  if (!profile) {
+    return (
+      <div className="w-[50%] border-l border-r border-gray-200 flex items-center justify-center">
+        <p className="text-gray-500">Loading profile...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-[50%] border-l border-r border-gray-200">
@@ -39,6 +42,7 @@ const Profile = () => {
             <p className="text-gray-500 text-md">10 posts</p>
           </div>
         </div>
+
         <div className="relative">
           <img
             src={
@@ -51,11 +55,16 @@ const Profile = () => {
           <div className="absolute top-36 left-4">
             <Avatar name={profile?.name} size="100" round={true} />
           </div>
-          <div className="absolute top-52 right-2">
-            <button className="px-4 py-1.5 font-semibold border-2 border-gray-400 rounded-full hover:bg-zinc-200">
-              Edit Profile
-            </button>
-          </div>
+
+          {/* Only show Edit Profile if it's your own profile */}
+          {!id && (
+            <div className="absolute top-52 right-2">
+              <button className="px-4 py-1.5 font-semibold border-2 border-gray-400 rounded-full hover:bg-zinc-200">
+                Edit Profile
+              </button>
+            </div>
+          )}
+
           <div className="mt-16 px-4">
             <h1 className="text-xl font-bold">{profile?.name}</h1>
             <p className="text-gray-500">@{profile?.username}</p>

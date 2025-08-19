@@ -7,9 +7,11 @@ import {
   RiBookmarkLine,
   RiLogoutBoxRLine,
 } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const LeftSidebar = () => {
+  const { user } = useSelector((store) => store.user);
   return (
     <div className="w-[20%] ">
       <div>
@@ -38,7 +40,7 @@ const LeftSidebar = () => {
             <div className="font-semibold text-lg ml-2">Notification</div>
           </div>
           <Link
-            to="/profile"
+            to={`/profile/${user?._id}`}
             className="SideBar flex items-center my-2 hover:bg-gray-200 active:bg-gray-300 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95"
           >
             <RiUser3Line size={24} className="group-hover:scale-110" />
