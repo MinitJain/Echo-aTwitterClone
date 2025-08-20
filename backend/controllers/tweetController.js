@@ -12,10 +12,12 @@ export const createTweet = async (req, res) => {
         success: false,
       });
     }
+    const user = await User.findById(id).select("-password");
 
     await Tweet.create({
       description,
       userId: id,
+      userDetails: user,
     });
 
     return res.status(201).json({
@@ -57,7 +59,7 @@ export const likeorDislikeTweet = async (req, res) => {
       });
     }
 
-    if (tweet.like.includes(LoggedInUserId)) {
+    if (tweet.likes.includes(LoggedInUserId)) {
       // If the user has already liked the tweet, so we remove the like
       await Tweet.findByIdAndUpdate(tweetId, {
         $pull: { like: LoggedInUserId },
@@ -86,28 +88,15 @@ export const likeorDislikeTweet = async (req, res) => {
 };
 export const getAllTweets = async (req, res) => {
   try {
-    const id = req.params.id;
-
-    const loggedInUser = await User.findById(id);
-    if (!loggedInUser) {
-      return res.status(404).json({
-        message: "Logged-in user not found.",
-        success: false,
-      });
-    }
-
-    const loggedInUserTweets = await Tweet.find({ userId: id });
-
-    const followingUsersTweets = await Promise.all(
-      loggedInUser.following.map(async (followedUserId) => {
-        return await Tweet.find({ userId: followedUserId });
-      })
-    );
+    // Fetch all tweets, newest first
+    const allTweets = await Tweet.find()
+      .populate("userId", "name username") // optional: get user info
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       message: "All tweets fetched successfully.",
       success: true,
-      tweets: [...loggedInUserTweets, ...followingUsersTweets.flat()],
+      tweets: allTweets,
     });
   } catch (error) {
     console.log("GetAllTweets Error:", error);

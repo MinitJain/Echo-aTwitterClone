@@ -2,7 +2,7 @@ import React from "react";
 import Avatar from "react-avatar";
 import { RiChat1Line, RiHeart3Line, RiBookmarkLine } from "react-icons/ri";
 
-const Tweet = () => {
+const Tweet = ({ tweet }) => {
   return (
     <div>
       <div>
@@ -10,14 +10,13 @@ const Tweet = () => {
           <Avatar src="" name="User Name" size="40" />
           <div className="ml-2 w-full">
             <div className="flex items-center ml-2">
-              <h1 className="font-semibold">Alex</h1>
-              <p className="text-gray-500 text-sm  ml-2"> @IamAlex123</p>
+              <h1 className="font-semibold">{tweet?.userDetails?.[0]?.name}</h1>
+              <p className="text-gray-500 text-sm  ml-2">
+                @{tweet?.userDetails?.[0]?.username}
+              </p>
             </div>
             <div>
-              <p className="text-gray-700 text-sm">
-                This is a sample tweet content. It can be a short message or a
-                longer post depending on the user's thoughts.
-              </p>
+              <p className="text-gray-700 text-sm ml-2">{tweet?.description}</p>
             </div>
             <div className="flex justify-between mt-2">
               <div className="flex items-center group">
@@ -36,7 +35,9 @@ const Tweet = () => {
                     className="group-hover:scale-110 group-hover:text-red-500"
                   />
                 </div>
-                <p className="text-sm ml-1 group-hover:text-red-500">12</p>
+                <p className="text-sm ml-1 group-hover:text-red-500">
+                  {tweet?.likes?.length}
+                </p>
               </div>
               <div className="flex items-center group">
                 <div className="rounded-full cursor-pointer p-2 transition-all hover:bg-green-100 active:scale-95">

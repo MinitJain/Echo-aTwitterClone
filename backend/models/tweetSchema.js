@@ -6,15 +6,18 @@ const tweetSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    like: {
-      type: Array,
-      default: [],
-    },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     userId: {
       type: mongoose.Schema.Types.ObjectId, // References the User model (creates a relationship)
       ref: "User", // Links to the User collection
+      required: true,
     },
-    followers: {
+    userDetails: {
       type: Array,
       default: [],
     },
@@ -23,4 +26,4 @@ const tweetSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Tweet = mongoose.model("tweet", tweetSchema);
+export const Tweet = mongoose.model("Tweet", tweetSchema);

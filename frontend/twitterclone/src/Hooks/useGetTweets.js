@@ -1,17 +1,17 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { TWEET_API_END_POINT } from "../utils/constant";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllTweets } from "../redux/tweetSlice";
 
 const useGetTweets = (id) => {
   const dispatch = useDispatch();
-  //tweet/alltweets/688ced9af9a17500b49a1dca
+  const { refresh } = useSelector((store) => store.tweet);
 
   useEffect(() => {
     const fetchTweets = async () => {
       try {
-        const res = await axios.get(`${TWEET_API_END_POINT}/alltweets/${id}`, {
+        const res = await axios.get(`${TWEET_API_END_POINT}/alltweets`, {
           withCredentials: true,
         });
         console.log("Fetched All Tweets from API:", res.data.tweets);
@@ -21,8 +21,8 @@ const useGetTweets = (id) => {
       }
     };
 
-    if (id) fetchTweets();
-  }, [id]);
+    fetchTweets(); // ✅ always run
+  }, [refresh]);
 };
 
 export default useGetTweets;
