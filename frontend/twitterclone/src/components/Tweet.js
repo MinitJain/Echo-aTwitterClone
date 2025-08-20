@@ -1,8 +1,35 @@
 import React from "react";
 import Avatar from "react-avatar";
 import { RiChat1Line, RiHeart3Line, RiBookmarkLine } from "react-icons/ri";
+import axios from "axios";
+import { TWEET_API_END_POINT } from "../utils/constant";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { getRefresh } from "../redux/tweetSlice";
 
 const Tweet = ({ tweet }) => {
+  const { user } = useSelector((store) => store.user);
+  const dispatch = useDispatch();
+
+  const likeOrDislikeHandler = async (id) => {
+    try {
+      const res = await axios.put(
+        `${TWEET_API_END_POINT}/like/${id}`,
+        { id: user?._id },
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(getRefresh());
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <div>
@@ -29,7 +56,10 @@ const Tweet = ({ tweet }) => {
                 <p className="text-sm ml-1 group-hover:text-blue-500">12</p>
               </div>
               <div className="flex items-center group">
-                <div className="cursor-pointer p-2 rounded-full transition-all hover:bg-red-100 active:scale-95">
+                <div
+                  onClick={() => likeOrDislikeHandler(tweet?._id)}
+                  className="cursor-pointer p-2 rounded-full transition-all hover:bg-red-100 active:scale-95"
+                >
                   <RiHeart3Line
                     size={20}
                     className="group-hover:scale-110 group-hover:text-red-500"
