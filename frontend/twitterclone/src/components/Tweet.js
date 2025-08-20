@@ -1,6 +1,11 @@
 import React from "react";
 import Avatar from "react-avatar";
-import { RiChat1Line, RiHeart3Line, RiBookmarkLine } from "react-icons/ri";
+import {
+  RiChat1Line,
+  RiHeart3Line,
+  RiHeart3Fill,
+  RiBookmarkLine,
+} from "react-icons/ri";
 import axios from "axios";
 import { TWEET_API_END_POINT } from "../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,23 +14,33 @@ import { getRefresh } from "../redux/tweetSlice";
 
 const Tweet = ({ tweet }) => {
   const { user } = useSelector((store) => store.user);
+  const [likes, setLikes] = React.useState(tweet?.likes || []);
+
   const dispatch = useDispatch();
 
   const likeOrDislikeHandler = async (id) => {
     try {
+      const alreadyLiked = likes.includes(user?._id);
+      let updatedLikes;
+
+      if (alreadyLiked) {
+        updatedLikes = likes.filter((uid) => uid !== user._id);
+      } else {
+        updatedLikes = [...likes, user._id];
+      }
+      setLikes(updatedLikes); // update UI instantly
+
       const res = await axios.put(
         `${TWEET_API_END_POINT}/like/${id}`,
         { id: user?._id },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-      dispatch(getRefresh());
+
       if (res.data.success) {
-        toast.success(res.data.message);
+        dispatch(getRefresh()); // refetch fresh data
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
       console.log(error);
     }
   };
@@ -60,13 +75,20 @@ const Tweet = ({ tweet }) => {
                   onClick={() => likeOrDislikeHandler(tweet?._id)}
                   className="cursor-pointer p-2 rounded-full transition-all hover:bg-red-100 active:scale-95"
                 >
-                  <RiHeart3Line
-                    size={20}
-                    className="group-hover:scale-110 group-hover:text-red-500"
-                  />
+                  {likes.includes(user?._id) ? (
+                    <RiHeart3Fill
+                      size={20}
+                      className="text-red-500 scale-110"
+                    />
+                  ) : (
+                    <RiHeart3Line
+                      size={20}
+                      className="group-hover:scale-110 group-hover:text-red-500"
+                    />
+                  )}
                 </div>
                 <p className="text-sm ml-1 group-hover:text-red-500">
-                  {tweet?.likes?.length}
+                  {likes.length}
                 </p>
               </div>
               <div className="flex items-center group">
