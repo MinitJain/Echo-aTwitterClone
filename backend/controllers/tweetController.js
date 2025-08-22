@@ -60,9 +60,8 @@ export const likeorDislikeTweet = async (req, res) => {
     }
 
     if (tweet.likes.includes(LoggedInUserId)) {
-      // If the user has already liked the tweet, so we remove the like
       await Tweet.findByIdAndUpdate(tweetId, {
-        $pull: { like: LoggedInUserId },
+        $pull: { likes: LoggedInUserId },
       });
 
       return res.status(200).json({
@@ -86,6 +85,7 @@ export const likeorDislikeTweet = async (req, res) => {
     });
   }
 };
+
 export const getAllTweets = async (req, res) => {
   try {
     // Fetch all tweets, newest first
@@ -119,12 +119,11 @@ export const getFollowingTweets = async (req, res) => {
       });
     }
 
-    const followingUsersTweets = await Promise.all(
-      //If you just loop with forEach() or map() without Promise.all, your code won’t wait for the async DB calls (Tweet.find(...)) to finish before moving on.
-      loggedInUser.following.map(async (followedUserId) => {
-        return await Tweet.find({ userId: followedUserId });
-      })
-    );
+    const followingUsersTweets = await Tweet.find({
+      userId: { $in: loggedInUser.following },
+    })
+      .populate("userId", "name username")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       message: "All tweets fetched successfully.",

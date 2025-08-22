@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 const Feed = () => {
   const { tweets } = useSelector((store) => store.tweet);
   return (
-    <div className="w-[50%] border ">
+    <div className="w-[50%] ">
       <div>
         <CreatePost />
         {tweets?.map((tweet) => {
