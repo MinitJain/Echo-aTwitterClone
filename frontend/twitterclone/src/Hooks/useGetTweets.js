@@ -7,12 +7,11 @@ import toast from "react-hot-toast";
 
 const useGetTweets = (id) => {
   const dispatch = useDispatch();
-  const { refresh } = useSelector((store) => store.tweet);
-  // const { User } = useSelector((store) => store.user);
+  const { refresh, isActive } = useSelector((store) => store.tweet);
 
   const fetchTweets = async () => {
     try {
-      const res = await axios.get(`${TWEET_API_END_POINT}/alltweets`, {
+      const res = await axios.get(`${TWEET_API_END_POINT}/allTweets`, {
         withCredentials: true,
       });
       console.log("Fetched All Tweets from API:", res.data.tweets);
@@ -32,7 +31,7 @@ const useGetTweets = (id) => {
       );
 
       if (res.data.success) {
-        console.log(res);
+        console.log("Fetched Following Tweets from API:", res.data.tweets);
         dispatch(getAllTweets(res.data.tweets));
       }
     } catch (error) {
@@ -45,9 +44,14 @@ const useGetTweets = (id) => {
   };
 
   useEffect(() => {
-    fetchTweets();
-    followingTweetHandler(); // ✅ always run
-  }, [refresh]);
+    if (isActive) {
+      // Show following tweets
+      followingTweetHandler();
+    } else {
+      // Show all tweets (For You)
+      fetchTweets();
+    }
+  }, [refresh, isActive, id]);
 };
 
 export default useGetTweets;

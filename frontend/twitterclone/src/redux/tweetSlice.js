@@ -5,12 +5,12 @@ const tweetSlice = createSlice({
   initialState: {
     tweets: [],
     refresh: false,
-    isActive: true,
+    isActive: false,
   },
   reducers: {
     getAllTweets: (state, action) => {
-      console.log("Reducer received:", action.payload); // debug log
-      state.tweets = action.payload;
+      console.log("Reducer received:", action.payload);
+      state.tweets = Array.isArray(action.payload) ? action.payload : [];
     },
     getRefresh: (state) => {
       state.refresh = !state.refresh;

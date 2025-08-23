@@ -70,7 +70,7 @@ export const likeorDislikeTweet = async (req, res) => {
       });
     } else {
       await Tweet.findByIdAndUpdate(tweetId, {
-        $push: { like: LoggedInUserId },
+        $push: { likes: LoggedInUserId },
       });
       return res.status(200).json({
         message: "User liked your tweet.",
@@ -128,7 +128,7 @@ export const getFollowingTweets = async (req, res) => {
     return res.status(200).json({
       message: "All tweets fetched successfully.",
       success: true,
-      tweets: followingUsersTweets.flat(),
+      tweets: followingUsersTweets,
     });
   } catch (error) {
     console.log("getFollowingTweets Error:", error);

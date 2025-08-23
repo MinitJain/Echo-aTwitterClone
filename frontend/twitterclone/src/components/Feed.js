@@ -9,9 +9,11 @@ const Feed = () => {
     <div className="w-[50%] ">
       <div>
         <CreatePost />
-        {tweets?.map((tweet) => {
-          return <Tweet key={tweet?._id} tweet={tweet} />;
-        })}
+        {Array.isArray(tweets) && tweets.length > 0 ? (
+          tweets.map((tweet) => <Tweet key={tweet._id} tweet={tweet} />)
+        ) : (
+          <p className="text-center text-gray-500">No tweets found</p>
+        )}
       </div>
     </div>
   );
