@@ -1,14 +1,24 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { TWEET_API_END_POINT } from "../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTweets } from "../redux/tweetSlice";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const useGetTweets = (id) => {
-  const dispatch = useDispatch();
   const { refresh, isActive } = useSelector((store) => store.tweet);
+  const { user, otherUsers } = useSelector((store) => store.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, []);
+
+  // Prevent fetching if user is not logged in
   const fetchTweets = async () => {
     try {
       const res = await axios.get(`${TWEET_API_END_POINT}/allTweets`, {
@@ -23,6 +33,7 @@ const useGetTweets = (id) => {
 
   const followingTweetHandler = async () => {
     try {
+      axios.defaults.withCredentials = true;
       const res = await axios.get(
         `${TWEET_API_END_POINT}/followingtweets/${id}`,
         {

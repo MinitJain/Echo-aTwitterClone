@@ -18,8 +18,24 @@ const userSlice = createSlice({
     getMyProfile: (state, action) => {
       state.profile = action.payload;
     },
+    followingUpdate: (state, action) => {
+      if (!state.user || !state.user.following) return;
+
+      // unfollow
+      if (state.user.following.includes(action.payload)) {
+        state.user.following = state.user.following.filter(
+          (ItemId) => ItemId !== action.payload
+        );
+      } else {
+        state.user.following.push(action.payload);
+      }
+
+      // Persist updated user state to localStorage
+      localStorage.setItem("user", JSON.stringify(state.user));
+    },
   },
 });
 
-export const { getUser, getOtherUsers, getMyProfile } = userSlice.actions;
+export const { getUser, getOtherUsers, getMyProfile, followingUpdate } =
+  userSlice.actions;
 export default userSlice.reducer;

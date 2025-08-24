@@ -52,16 +52,16 @@ const CreatePost = () => {
         <div
           onClick={forYouHandler}
           className={` ${
-            !isActive ? "border border-b-3 border-blue-600" : null
-          } cursor-pointer w-full text-center px-4 py-3 hover:bg-gray-100 p-2 rounded-lg`}
+            !isActive ? " border-b-4 border-blue-600" : null
+          } cursor-pointer w-full text-center hover:bg-gray-100 p-2 rounded-md`}
         >
           <h1 className="font-semibold text-gray-600 text-lg ">For You</h1>
         </div>
         <div
           onClick={followingHandler}
           className={`${
-            isActive ? "border border-b-3 border-blue-600" : null
-          } cursor-pointer w-full text-center hover:bg-gray-100 p-2 rounded-lg`}
+            isActive ? "border-b-4 border-blue-600" : null
+          } cursor-pointer w-full text-center hover:bg-gray-100 p-2 rounded-md`}
         >
           <h1 className="font-semibold text-gray-600 text-lg ">Following</h1>
         </div>
