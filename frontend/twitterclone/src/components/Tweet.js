@@ -74,10 +74,11 @@ const Tweet = ({ tweet }) => {
       <div className="bg-white shadow-sm hover:shadow-md transition rounded-2xl p-4 mb-4 border border-gray-100">
         <div className="flex items-start space-x-3">
           {/* Avatar */}
-          <img
-            src={user.avatar}
-            alt="avatar"
-            className="w-10 h-10 rounded-full border"
+          <Avatar
+            src=""
+            name={tweet?.userDetails?.[0]?.name || "User"}
+            size="40"
+            round={true}
           />
 
           <div className="w-full">
