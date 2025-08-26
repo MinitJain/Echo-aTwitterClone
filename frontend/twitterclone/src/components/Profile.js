@@ -28,7 +28,7 @@ const Profile = () => {
         );
         dispatch(followingUpdate(id));
         dispatch(getRefresh());
-        toast.success(res.data.message || "User Unfollowed!");
+        // toast.success(res.data.message || "User Unfollowed!");
       } else {
         // Follow
         const res = await axios.post(
@@ -40,15 +40,15 @@ const Profile = () => {
         // Only update the state if the follow request was successful
         if (res.data.success) {
           dispatch(followingUpdate(id));
-          toast.success(res.data.message || "User followed!");
+          // toast.success(res.data.message || "User followed!");
         } else {
           // If the backend indicates failure, show the error message
-          toast.error(res.data.message || "Failed to follow user");
+          // toast.error(res.data.message || "Failed to follow user");
         }
       }
     } catch (error) {
       // Don't update the state if there's an error
-      toast.error(error.response?.data?.message || "Something went wrong!");
+      // toast.error(error.response?.data?.message || "Something went wrong!");
       console.log(error);
     }
   };
