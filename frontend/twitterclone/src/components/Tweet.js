@@ -9,10 +9,11 @@ import {
 import { MdDeleteOutline } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs"; // three dots icon
 import axios from "axios";
-import { TWEET_API_END_POINT } from "../utils/constant";
+import { TWEET_API_END_POINT, USER_API_END_POINT } from "../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { getRefresh } from "../redux/tweetSlice";
+import { bookmarkUpdate } from "../redux/userSlice";
 
 const Tweet = ({ tweet }) => {
   const { user } = useSelector((store) => store.user);
@@ -69,6 +70,36 @@ const Tweet = ({ tweet }) => {
       console.error(error);
     }
   };
+
+  // Handle bookmarking and unbookmarking of tweets
+  const bookmarkHandler = async (tweetId) => {
+    if (!user) {
+      toast.error("Please login to bookmark tweets");
+      return;
+    }
+
+    try {
+      // update UI
+      dispatch(bookmarkUpdate(tweetId));
+
+      // Make API call to update bookmark on the server
+      const res = await axios.put(
+        `${USER_API_END_POINT}/bookmark/${tweetId}`,
+        { id: user?._id },
+        { withCredentials: true }
+      );
+
+      if (res.data.success) {
+        dispatch(getRefresh());
+      }
+    } catch (error) {
+      // If there's an error, show error message
+      toast.error(error.response?.data?.message || "Failed to bookmark tweet");
+      // Revert the optimistic update by dispatching bookmarkUpdate again
+      dispatch(bookmarkUpdate(tweetId));
+      console.error("Bookmark error:", error);
+    }
+  };
   return (
     <div className="relative mt-2">
       <div className="bg-white shadow-sm hover:shadow-md transition rounded-2xl p-4 mb-4 border border-gray-100">
@@ -117,9 +148,21 @@ const Tweet = ({ tweet }) => {
               </button>
 
               {/* bookmark */}
-              <button className="flex items-center space-x-1 rounded-full p-2 hover:bg-green-50 hover:text-green-500 transition">
-                <RiBookmarkLine size={18} />
-                <span className="text-sm">12</span>
+              <button
+                onClick={() => bookmarkHandler(tweet?._id)}
+                className="flex items-center space-x-1 rounded-full p-2 hover:bg-green-50 hover:text-green-500 transition"
+              >
+                {user?.bookmarks?.includes(tweet?._id) ? (
+                  <RiBookmarkLine
+                    size={18}
+                    className="text-green-500 fill-current"
+                  />
+                ) : (
+                  <RiBookmarkLine size={18} />
+                )}
+                <span className="text-sm">
+                  {user?.bookmarks?.includes(tweet?._id) ? "Saved" : "Save"}
+                </span>
               </button>
             </div>
           </div>
