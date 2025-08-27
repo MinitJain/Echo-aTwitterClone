@@ -60,39 +60,64 @@ const LeftSidebar = () => {
         <div className="my-4">
           <Link
             to="/"
-            className="SideBar flex items-center my-2 hover:bg-gray-200 active:bg-gray-300 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95"
+            className="SideBar flex items-center my-2 hover:bg-gray-100 active:bg-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95"
           >
-            <RiHome5Line size={24} className="group-hover:scale-110" />
-            <div className="font-semibold text-lg ml-2">Home</div>
+            <RiHome5Line
+              size={24}
+              className="group-hover:scale-110 text-gray-800"
+            />
+            <div className="font-semibold text-lg ml-2 text-gray-800">Home</div>
           </Link>
-          <div className="SideBar flex items-center my-2 hover:bg-gray-200 active:bg-gray-300 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95">
-            <RiHashtag size={24} className="group-hover:scale-110" />
-            <div className="font-semibold text-lg ml-2">Explore</div>
+          <div className="SideBar flex items-center my-2 hover:bg-gray-100 active:bg-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95">
+            <RiHashtag
+              size={24}
+              className="group-hover:scale-110 text-gray-800"
+            />
+            <div className="font-semibold text-lg ml-2 text-gray-800">
+              Explore
+            </div>
           </div>
-          <div className="SideBar flex items-center my-2 hover:bg-gray-200 active:bg-gray-300 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95">
-            <RiNotification3Line size={24} className="group-hover:scale-110" />
-            <div className="font-semibold text-lg ml-2">Notification</div>
+          <div className="SideBar flex items-center my-2 hover:bg-gray-100 active:bg-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95">
+            <RiNotification3Line
+              size={24}
+              className="group-hover:scale-110 text-gray-800"
+            />
+            <div className="font-semibold text-lg ml-2 text-gray-800">
+              Notification
+            </div>
           </div>
           {user && (
             <Link
               to={`/profile/${user._id}`}
-              className="SideBar flex items-center my-2 hover:bg-gray-200 active:bg-gray-300 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95"
+              className="SideBar flex items-center my-2 hover:bg-gray-100 active:bg-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95"
             >
-              <RiUser3Line size={24} className="group-hover:scale-110" />
-              <div className="font-semibold text-lg ml-2">Profile</div>
+              <RiUser3Line
+                size={24}
+                className="group-hover:scale-110 text-gray-800"
+              />
+              <div className="font-semibold text-lg ml-2 text-gray-800">
+                Profile
+              </div>
             </Link>
           )}
-          <div className="SideBar flex items-center my-2 hover:bg-gray-200 active:bg-gray-300 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95">
-            <RiBookmarkLine size={24} className="group-hover:scale-110" />
-            <div className="font-semibold text-lg ml-2">Bookmarks</div>
+          <div className="SideBar flex items-center my-2 hover:bg-gray-100 active:bg-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95">
+            <RiBookmarkLine
+              size={24}
+              className="group-hover:scale-110 text-gray-800"
+            />
+            <div className="font-semibold text-lg ml-2 text-gray-800">
+              Bookmarks
+            </div>
           </div>
+
           <div
             onClick={logoutHandler}
-            className="SideBar flex items-center my-2 hover:bg-gray-200 active:bg-gray-300 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95"
+            className="SideBar text-red-600 flex items-center my-2 hover:bg-gray-200 active:bg-gray-300 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95"
           >
             <RiLogoutBoxRLine size={24} />
             <div className="font-semibold text-lg ml-2">Logout</div>
           </div>
+
           <button className="px py-2 font-bold border-none text-md bg-[#1D9BF0] text-white rounded-full w-full mt-4 hover:bg-[#1A8CD8]">
             Post
           </button>
