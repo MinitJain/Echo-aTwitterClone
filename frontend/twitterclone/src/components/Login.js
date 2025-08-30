@@ -107,8 +107,8 @@ const Login = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-400 to-gray-900 ">
-      <div className="bg-gray-200 shadow-2xl border border-gray-200/50 rounded-2xl p-12 flex flex-col items-center w-full max-w-md">
+    <div className="w-screen h-screen flex items-center justify-center bg-gray-100 ">
+      <div className="bg-gray-200 shadow-md  hover:shadow-xl active:shadow-2xl transition-shadow border border-gray-200/50 rounded-2xl p-12 flex flex-col items-center w-full max-w-md">
         <img
           src="/NodesLogoForEcho.png"
           alt="Logo"
@@ -187,13 +187,12 @@ const Login = () => {
           <button
             type="submit"
             className="w-full py-3 font-semibold rounded-xl
-            bg-gradient-to-r from-slate-900 to-gray-800
-           text-white shadow-lg
-            hover:shadow-xl hover:shadow-blue-500/30
-            hover:scale-[1.02] hover:-translate-y-0.5
-            active:scale-[0.98] active:translate-y-0
-            transition-all duration-200 ease-out
-            border border-slate-600/30 hover:border-slate-500"
+             bg-[#1D9BF0] text-white shadow-lg
+             hover:bg-[#1A8CD8] hover:shadow-xl hover:shadow-[#1D9BF0]/40
+             hover:scale-[1.02] hover:-translate-y-0.5
+             active:scale-[0.98] active:translate-y-0
+             transition-all duration-200 ease-out
+             border border-[#1D9BF0]/40 hover:border-[#1A8CD8]"
           >
             {isLogin ? "Login" : "Sign Up"}
           </button>

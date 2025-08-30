@@ -55,8 +55,6 @@ const Tweet = ({ tweet }) => {
       );
       if (!confirmDelete) return;
 
-      // 🔗 Call your backend API
-
       const res = await axios.delete(`${TWEET_API_END_POINT}/delete/${id}`, {
         withCredentials: true,
       });
@@ -93,13 +91,13 @@ const Tweet = ({ tweet }) => {
         dispatch(getRefresh());
       }
     } catch (error) {
-      // If there's an error, show error message
       toast.error(error.response?.data?.message || "Failed to bookmark tweet");
-      // Revert the optimistic update by dispatching bookmarkUpdate again
+      // Revert optimistic update
       dispatch(bookmarkUpdate(tweetId));
       console.error("Bookmark error:", error);
     }
   };
+
   return (
     <div className="relative mt-2">
       <div className="bg-white shadow-sm hover:shadow-md transition rounded-2xl p-4 mb-4 border border-gray-100">
@@ -129,7 +127,12 @@ const Tweet = ({ tweet }) => {
             {/* Actions */}
             <div className="flex justify-around mt-3 text-gray-500">
               {/* comment */}
-              <button className="flex items-center space-x-1 rounded-full p-2 hover:bg-blue-50 hover:text-blue-500 transition">
+              <button
+                className="flex items-center space-x-1 rounded-full p-2
+                           hover:bg-blue-50 hover:text-blue-500
+                           transition-all duration-200 ease-out
+                           hover:scale-[1.05] active:scale-[0.95]"
+              >
                 <RiChat1Line size={18} />
                 <span className="text-sm">12</span>
               </button>
@@ -137,20 +140,32 @@ const Tweet = ({ tweet }) => {
               {/* like */}
               <button
                 onClick={() => likeOrDislikeHandler(tweet?._id)}
-                className="flex items-center space-x-1 rounded-full p-2 hover:bg-red-50 hover:text-red-500 transition"
+                className="flex items-center space-x-1 rounded-full p-2
+                           hover:bg-red-50 hover:text-red-500
+                           transition-all duration-200 ease-out
+                           hover:scale-[1.05] active:scale-[0.95]"
               >
                 {likes.includes(user?._id) ? (
                   <RiHeart3Fill size={18} className="text-red-500" />
                 ) : (
                   <RiHeart3Line size={18} />
                 )}
-                <span className="text-sm">{likes.length}</span>
+                <span
+                  className={`text-sm ${
+                    likes.includes(user?._id) ? "text-red-500" : ""
+                  }`}
+                >
+                  {likes.length}
+                </span>
               </button>
 
               {/* bookmark */}
               <button
                 onClick={() => bookmarkHandler(tweet?._id)}
-                className="flex items-center space-x-1 rounded-full p-2 hover:bg-green-50 hover:text-green-500 transition"
+                className="flex items-center space-x-1 rounded-full p-2
+                           hover:bg-green-50 hover:text-green-500
+                           transition-all duration-200 ease-out
+                           hover:scale-[1.05] active:scale-[0.95]"
               >
                 {user?.bookmarks?.includes(tweet?._id) ? (
                   <RiBookmarkLine
@@ -160,7 +175,13 @@ const Tweet = ({ tweet }) => {
                 ) : (
                   <RiBookmarkLine size={18} />
                 )}
-                <span className="text-sm">
+                <span
+                  className={`text-sm ${
+                    user?.bookmarks?.includes(tweet?._id)
+                      ? "text-green-500"
+                      : ""
+                  }`}
+                >
                   {user?.bookmarks?.includes(tweet?._id) ? "Saved" : "Save"}
                 </span>
               </button>
