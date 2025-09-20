@@ -47,6 +47,10 @@ app.use(cors(corsOptions));
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/tweet", tweetRoute);
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Backend is live!" });
+});
+
 app.get("/home", (req, res) => {
   res.status(200).json({
     message: "coming from backend..",
