@@ -22,16 +22,26 @@ app.use(
 app.use(express.json()); // Parses JSON requests
 app.use(cookieParser()); // Parses cookies
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://your-frontend-domain.vercel.app", // Replace with your actual Vercel frontend URL
+];
+
 const corsOptions = {
-  origin: "http://localhost:3000",
-  Credentials: true,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 };
-app.use(
-  cors({
-    origin: "http://localhost:3000", //  frontend origin
-    credentials: true, // allow cookies
-  })
-);
+
+app.use(cors(corsOptions));
 
 //api
 app.use("/api/v1/user", userRoute);
