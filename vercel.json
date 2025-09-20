@@ -9,7 +9,8 @@
       "src": "frontend/twitterclone/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "build"
+        "distDir": "build",
+        "buildCommand": "npm run build"
       }
     }
   ],
@@ -26,7 +27,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/twitterclone/index.html"
+      "dest": "frontend/twitterclone/build/index.html"
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "name": "echo-twitter-clone",
+  "version": "1.0.0",
+  "description": "ECHO - A Twitter Clone built with MERN stack",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend/twitterclone && npm run build",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend/twitterclone && npm start\"",
+    "install-all": "cd backend && npm install && cd ../frontend/twitterclone && npm install",
+    "start": "cd backend && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "workspaces": [
+    "backend",
+    "frontend/twitterclone"
+  ]
+}
