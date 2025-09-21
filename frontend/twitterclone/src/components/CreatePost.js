@@ -68,7 +68,7 @@ const CreatePost = () => {
       </div>
       <div>
         <div className="flex m-4">
-          <Avatar name={user.name} size="40" round={true} />
+          <Avatar name={user?.name || "Guest"} size="40" round={true} />
           <input
             value={description}
             onChange={(e) => setDescription(e.target.value)}

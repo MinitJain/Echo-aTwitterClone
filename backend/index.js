@@ -24,6 +24,7 @@ app.use(cookieParser()); // Parses cookies
 
 const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:3001",
   process.env.FRONTEND_URL || "https://your-app-name.vercel.app",
 ];
 
