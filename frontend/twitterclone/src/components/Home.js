@@ -16,7 +16,7 @@ const Home = () => {
   console.log("Redux otherUsers:", otherUsers);
 
   return (
-    <div className="Home  flex justify-between max-w-7xl w-[100%] mx-auto ">
+    <div className="Home flex justify-between max-w-7xl w-[100%] mx-auto ">
       <LeftSidebar />
       <Outlet />
       <RightSideBar otherUsers={otherUsers} />

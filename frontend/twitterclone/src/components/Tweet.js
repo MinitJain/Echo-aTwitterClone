@@ -90,133 +90,156 @@ const Tweet = ({ tweet }) => {
   };
 
   return (
-    <div className="relative mt-2">
-      <div className="bg-white shadow-sm hover:shadow-md transition rounded-2xl p-4 mb-4 border border-gray-100">
-        <div className="flex items-start space-x-3">
-          {/* Avatar */}
-          {tweet?.userDetails?.[0]?.profileImageUrl ? (
-            <img
-              src={tweet.userDetails[0].profileImageUrl}
-              alt={tweet.userDetails[0].name}
-              className="w-10 h-10 rounded-full object-cover"
-            />
-          ) : (
-            <Avatar
-              name={tweet?.userDetails?.[0]?.name || "User"}
-              size="40"
-              round={true}
-            />
-          )}
-
-          <div className="w-full">
-            {/* Header */}
-            <div className="flex items-center space-x-2">
-              <h1 className="font-semibold">{tweet?.userDetails?.[0]?.name}</h1>
-              <p className="text-gray-500 text-sm">
-                @{tweet?.userDetails?.[0]?.username}
-              </p>
+    <div className="relative">
+      <article className="bg-white border-b border-gray-100 hover:bg-gray-50/50 transition-all duration-200 group">
+        <div className="p-6">
+          <div className="flex gap-4">
+            {/* Avatar */}
+            <div className="flex-shrink-0">
+              {tweet?.userDetails?.[0]?.profileImageUrl ? (
+                <img
+                  src={tweet.userDetails[0].profileImageUrl}
+                  alt={tweet.userDetails[0].name}
+                  className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm"
+                />
+              ) : (
+                <Avatar
+                  name={tweet?.userDetails?.[0]?.name || "User"}
+                  size="48"
+                  round={true}
+                  className="ring-2 ring-white shadow-sm"
+                />
+              )}
             </div>
 
-            {/* Description */}
-            <p className="mt-2 text-gray-800 text-[15px] leading-relaxed">
-              {tweet?.description}
-            </p>
-
-            {/* Actions */}
-            <div className="flex justify-around mt-3 text-gray-500">
-              {/* like */}
-              <button
-                onClick={() => likeOrDislikeHandler(tweet?._id)}
-                className="flex items-center space-x-1 rounded-full p-2
-                           hover:bg-red-50 hover:text-red-500
-                           transition-all duration-200 ease-out
-                           hover:scale-[1.05] active:scale-[0.95]"
-              >
-                {likes.includes(user?._id) ? (
-                  <RiHeart3Fill size={18} className="text-red-500" />
-                ) : (
-                  <RiHeart3Line size={18} />
-                )}
-                <span
-                  className={`text-sm ${
-                    likes.includes(user?._id) ? "text-red-500" : ""
-                  }`}
-                >
-                  {likes.length}
+            <div className="flex-1 min-w-0">
+              {/* Header */}
+              <div className="flex items-center gap-2 mb-2">
+                <h2 className="font-semibold text-gray-900 text-[15px] tracking-[-0.01em] truncate">
+                  {tweet?.userDetails?.[0]?.name}
+                </h2>
+                <span className="text-gray-500 text-[14px] truncate">
+                  @{tweet?.userDetails?.[0]?.username}
                 </span>
-              </button>
+              </div>
 
-              {/* bookmark */}
-              <button
-                onClick={() => bookmarkHandler(tweet?._id)}
-                className="flex items-center space-x-1 rounded-full p-2
-                           hover:bg-green-50 hover:text-green-500
-                           transition-all duration-200 ease-out
-                           hover:scale-[1.05] active:scale-[0.95]"
+              {/* Content */}
+              <div className="mb-4">
+                <p className="text-gray-900 text-[15px] leading-relaxed whitespace-pre-wrap">
+                  {tweet?.description}
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div
+                className={`flex items-center ${
+                  user?._id === tweet?.userId?._id
+                    ? "justify-between"
+                    : "justify-center gap-8"
+                } mt-2`}
               >
-                {user?.bookmarks?.includes(tweet?._id) ? (
+                {/* Like Button */}
+                <button
+                  onClick={() => likeOrDislikeHandler(tweet?._id)}
+                  className="group/like flex items-center gap-2 px-4 py-2 rounded-full hover:bg-red-50 transition-all duration-200 active:scale-95"
+                >
+                  {likes.includes(user?._id) ? (
+                    <RiHeart3Fill size={18} className="text-red-500" />
+                  ) : (
+                    <RiHeart3Line
+                      size={18}
+                      className="text-gray-500 group-hover/like:text-red-500"
+                    />
+                  )}
+                  <span
+                    className={`text-sm font-medium ${
+                      likes.includes(user?._id)
+                        ? "text-red-500"
+                        : "text-gray-500 group-hover/like:text-red-500"
+                    }`}
+                  >
+                    {likes.length}
+                  </span>
+                </button>
+
+                {/* Bookmark Button */}
+                <button
+                  onClick={() => bookmarkHandler(tweet?._id)}
+                  className="group/bookmark flex items-center gap-2 px-4 py-2 rounded-full hover:bg-blue-50 transition-all duration-200 active:scale-95"
+                >
                   <RiBookmarkLine
                     size={18}
-                    className="text-green-500 fill-current"
+                    className={`${
+                      user?.bookmarks?.includes(tweet?._id)
+                        ? "text-blue-500 fill-current"
+                        : "text-gray-500 group-hover/bookmark:text-blue-500"
+                    }`}
                   />
-                ) : (
-                  <RiBookmarkLine size={18} />
-                )}
-                <span
-                  className={`text-sm ${
-                    user?.bookmarks?.includes(tweet?._id)
-                      ? "text-green-500"
-                      : ""
-                  }`}
-                >
-                  {user?.bookmarks?.includes(tweet?._id) ? "Saved" : "Save"}
-                </span>
-              </button>
-
-              {/* delete - only show for tweet owner */}
-              {user?._id === tweet?.userId?._id && (
-                <button
-                  onClick={() => {
-                    setTweetToDelete(tweet._id);
-                    setShowDeleteConfirm(true);
-                  }}
-                  className="flex items-center space-x-1 rounded-full p-2
-                             hover:bg-red-50 hover:text-red-500
-                             transition-all duration-200 ease-out
-                             hover:scale-[1.05] active:scale-[0.95]"
-                >
-                  <MdDeleteOutline size={18} />
-                  <span className="text-sm">Delete</span>
+                  <span
+                    className={`text-sm font-medium ${
+                      user?.bookmarks?.includes(tweet?._id)
+                        ? "text-blue-500"
+                        : "text-gray-500 group-hover/bookmark:text-blue-500"
+                    }`}
+                  >
+                    {user?.bookmarks?.includes(tweet?._id) ? "Saved" : "Save"}
+                  </span>
                 </button>
-              )}
+
+                {/* Delete Button - only show for tweet owner */}
+                {user?._id === tweet?.userId?._id && (
+                  <button
+                    onClick={() => {
+                      setTweetToDelete(tweet._id);
+                      setShowDeleteConfirm(true);
+                    }}
+                    className="group/delete flex items-center gap-2 px-4 py-2 rounded-full hover:bg-red-50 transition-all duration-200 active:scale-95"
+                  >
+                    <MdDeleteOutline
+                      size={18}
+                      className="text-gray-500 group-hover/delete:text-red-500"
+                    />
+                    <span className="text-sm font-medium text-gray-500 group-hover/delete:text-red-500">
+                      Delete
+                    </span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-[90%] max-w-md">
-            <h2 className="text-lg font-semibold mb-4">
-              Are you sure you want to delete this tweet?
-            </h2>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  deleteTweetHandler(tweetToDelete);
-                  setShowDeleteConfirm(false);
-                }}
-                className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600"
-              >
-                Delete
-              </button>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 transform transition-all">
+            <div className="p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2 tracking-[-0.01em]">
+                Delete Tweet?
+              </h2>
+              <p className="text-gray-600 text-[15px] mb-6">
+                This action cannot be undone. Your tweet will be permanently
+                deleted.
+              </p>
+
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="px-6 py-2.5 text-gray-700 font-medium rounded-full border border-gray-200 hover:bg-gray-50 transition-all duration-200 active:scale-95 text-[15px]"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    deleteTweetHandler(tweetToDelete);
+                    setShowDeleteConfirm(false);
+                  }}
+                  className="px-6 py-2.5 bg-red-500 text-white font-medium rounded-full hover:bg-red-600 transition-all duration-200 active:scale-95 text-[15px] shadow-sm hover:shadow-md"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>

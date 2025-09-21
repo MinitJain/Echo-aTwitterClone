@@ -55,11 +55,11 @@ const RightSideBar = ({ otherUsers }) => {
   };
 
   return (
-    <div className="w-[25%] mt-4 px-4">
+    <div className="w-[25%] min-w-[280px] max-w-[320px] min-h-screen px-6 py-8 hidden lg:block">
       {/* Search Box */}
-      <div className="relative">
+      <div className="relative mb-6">
         <CiSearch
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
           size={20}
         />
         <input
@@ -67,87 +67,109 @@ const RightSideBar = ({ otherUsers }) => {
           value={searchQuery}
           onChange={handleSearch}
           placeholder="Search users..."
-          className="w-full py-3 pl-10 pr-4 bg-gray-100 rounded-full border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
+          className="w-full py-3.5 pl-12 pr-4 bg-gray-50 text-gray-900 placeholder-gray-500 rounded-2xl border border-transparent focus:border-gray-200 focus:bg-white focus:ring-0 focus:outline-none transition-all duration-200 text-[15px] font-medium"
         />
       </div>
 
       {/* Search Results */}
       {searchQuery && searchResults.length > 0 && (
-        <div className="mt-2 p-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
-          <h2 className="text-lg font-semibold mb-3">Search Results</h2>
-          {searchResults.map((user) => (
-            <div
-              key={user._id}
-              className="grid grid-cols-[1fr_auto] items-center gap-3 p-2 hover:bg-gray-50 rounded-xl transition-colors"
-            >
-              <div className="flex items-center min-w-0">
-                <Avatar name={user.name} size="40" round={true} />
-                <div className="ml-2 overflow-hidden">
-                  <h1 className="font-semibold truncate">{user.name}</h1>
-                  <p className="text-sm text-gray-500 truncate">
-                    @{user.username}
-                  </p>
+        <div className="mb-6 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4 tracking-[-0.01em]">
+            Search Results
+          </h2>
+          <div className="space-y-3">
+            {searchResults.map((user) => (
+              <div
+                key={user._id}
+                className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-xl transition-all duration-200 group gap-3"
+              >
+                <div className="flex items-center min-w-0 flex-1">
+                  <div className="flex-shrink-0">
+                    <Avatar
+                      name={user.name}
+                      size="44"
+                      round={true}
+                      className="ring-2 ring-white shadow-sm"
+                    />
+                  </div>
+                  <div className="ml-3 min-w-0 flex-1">
+                    <h3 className="font-semibold text-gray-900 text-[15px] tracking-[-0.01em] truncate">
+                      {user.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 truncate">
+                      @{user.username}
+                    </p>
+                  </div>
                 </div>
+                <Link to={`/profile/${user?._id}`} className="flex-shrink-0">
+                  <button className="bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 active:scale-[0.98] tracking-[-0.01em]">
+                    View
+                  </button>
+                </Link>
               </div>
-              <Link to={`/profile/${user?._id}`}>
-                <button className="bg-blue-500 min-w-[80px] px-4 py-1.5 text-white text-sm font-semibold rounded-full hover:bg-blue-600 active:bg-blue-700 transition-all duration-200 active:scale-95">
-                  View
-                </button>
-              </Link>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
       {/* Suggested for You section */}
-      <div className="mt-4 p-4 bg-white rounded-2xl border border-gray-200 shadow-sm">
-        <h1 className="text-xl font-bold mb-4">Suggested for You</h1>
-        {otherUsers && otherUsers.length > 0 ? (
-          otherUsers.map((otherUser) => (
-            <div
-              key={otherUser._id}
-              className="grid grid-cols-[1fr_auto] items-center p-3 hover:bg-gray-50 rounded-xl transition-colors border-b border-gray-100 last:border-b-0"
-            >
-              <Link
-                to={`/profile/${otherUser?._id}`}
-                className="flex items-center min-w-0"
-              >
-                <Avatar
-                  name={otherUser.name}
-                  size="45"
-                  round={true}
-                  className="border-2 border-white shadow-sm"
-                />
-                <div className="ml-3 overflow-hidden">
-                  <h1 className="font-semibold text-gray-900 truncate">
-                    {otherUser.name}
-                  </h1>
-                  <p className="text-sm text-gray-500 truncate">
-                    @{otherUser.username}
-                  </p>
-                </div>
-              </Link>
+      <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 tracking-[-0.01em]">
+          Suggested for You
+        </h2>
 
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleFollowToggle(otherUser._id);
-                }}
-                className={`min-w-[100px] px-4 py-1.5 text-sm font-semibold rounded-full transition-all duration-200 active:scale-95 hover:shadow-md ${
-                  user.following.includes(otherUser._id)
-                    ? "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
-                }`}
+        {otherUsers && otherUsers.length > 0 ? (
+          <div className="space-y-3">
+            {otherUsers.map((otherUser) => (
+              <div
+                key={otherUser._id}
+                className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-xl transition-all duration-200 group gap-3"
               >
-                {user.following.includes(otherUser._id)
-                  ? "Following"
-                  : "Follow"}
-              </button>
-            </div>
-          ))
+                <Link
+                  to={`/profile/${otherUser?._id}`}
+                  className="flex items-center min-w-0 flex-1"
+                >
+                  <div className="flex-shrink-0">
+                    <Avatar
+                      name={otherUser.name}
+                      size="44"
+                      round={true}
+                      className="ring-2 ring-white shadow-sm"
+                    />
+                  </div>
+                  <div className="ml-3 min-w-0 flex-1">
+                    <h3 className="font-semibold text-gray-900 text-[15px] tracking-[-0.01em] group-hover:text-gray-700 transition-colors truncate">
+                      {otherUser.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 truncate">
+                      @{otherUser.username}
+                    </p>
+                  </div>
+                </Link>
+
+                <div className="flex-shrink-0">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleFollowToggle(otherUser._id);
+                    }}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 active:scale-[0.98] tracking-[-0.01em] ${
+                      user.following.includes(otherUser._id)
+                        ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-gray-900 text-white hover:bg-gray-800"
+                    }`}
+                  >
+                    {user.following.includes(otherUser._id)
+                      ? "Following"
+                      : "Follow"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
-          <div className="text-center py-6">
-            <p className="text-gray-500">No users found</p>
+          <div className="text-center py-8">
+            <p className="text-gray-500 text-[15px]">No users found</p>
           </div>
         )}
       </div>

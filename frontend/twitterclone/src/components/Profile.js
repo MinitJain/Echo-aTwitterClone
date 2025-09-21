@@ -72,7 +72,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="w-[50%] border-l border-r border-gray-200">
+    <div className="w-[50%] ">
       <div>
         <div className="flex items-center my-4">
           <Link
