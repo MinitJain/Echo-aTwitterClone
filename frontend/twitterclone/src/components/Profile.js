@@ -2,17 +2,20 @@ import Avatar from "react-avatar";
 import { IoMdArrowBack } from "react-icons/io";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import useGetProfile from "../Hooks/useGetProfile";
 import axios from "axios";
 import { USER_API_END_POINT } from "../utils/constant";
 import toast from "react-hot-toast";
 import { followingUpdate } from "../redux/userSlice";
 import { getRefresh } from "../redux/tweetSlice";
+import EditProfile from "./EditProfile";
 
 const Profile = () => {
   const { id } = useParams(); // URL param (if any)
   const { user, profile } = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   useGetProfile(id);
   // If there's an `id` in the URL, show that profile; else show logged-in user's profile
   const userId = id || user?._id;
@@ -94,14 +97,25 @@ const Profile = () => {
             className="w-full h-48 object-cover"
           />
           <div className="absolute top-36 left-4">
-            <Avatar name={profile?.name} size="100" round={true} />
+            {profile?.profileImageUrl ? (
+              <img
+                src={profile.profileImageUrl}
+                alt="Profile"
+                className="w-24 h-24 rounded-full object-cover border-4 border-white"
+              />
+            ) : (
+              <Avatar name={profile?.name} size="100" round={true} />
+            )}
           </div>
 
           {/* Only show Edit Profile if it's your own profile */}
 
           {profile?._id == user?._id ? (
             <div className="absolute top-52 right-2">
-              <button className="px-4 py-1.5 font-semibold border-2 border-gray-400 rounded-full hover:bg-zinc-200">
+              <button
+                onClick={() => setIsEditProfileOpen(true)}
+                className="px-4 py-1.5 font-semibold border-2 border-gray-400 rounded-full hover:bg-zinc-200"
+              >
                 Edit Profile
               </button>
             </div>
@@ -121,14 +135,18 @@ const Profile = () => {
             <p className="text-gray-500">@{profile?.username}</p>
             <div className="mt-4">
               <p className="text-gray-800 text-sm">
-                🌐 Full Stack Developer | MERN Stack Enthusiast | DSA IN C++ |
-                SQL | Open Source Contributor | Tech Blogger | Passionate about
-                building scalable web applications
+                {profile?.bio || "No bio available"}
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfile
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+      />
     </div>
   );
 };

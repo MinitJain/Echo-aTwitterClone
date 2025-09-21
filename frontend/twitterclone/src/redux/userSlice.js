@@ -53,6 +53,20 @@ const userSlice = createSlice({
       // Persist updated user state to localStorage
       localStorage.setItem("user", JSON.stringify(state.user));
     },
+    updateUser: (state, action) => {
+      if (!state.user) return;
+
+      // Update user data
+      state.user = { ...state.user, ...action.payload };
+
+      // Update profile if it's the same user
+      if (state.profile && state.profile._id === action.payload._id) {
+        state.profile = { ...state.profile, ...action.payload };
+      }
+
+      // Persist updated user state to localStorage
+      localStorage.setItem("user", JSON.stringify(state.user));
+    },
   },
 });
 
@@ -62,5 +76,6 @@ export const {
   getMyProfile,
   followingUpdate,
   bookmarkUpdate,
+  updateUser,
 } = userSlice.actions;
 export default userSlice.reducer;

@@ -306,3 +306,97 @@ export const unfollow = async (req, res) => {
     });
   }
 };
+
+// Update Profile Controller
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { name, username, bio, profileImageUrl, bannerUrl } = req.body;
+    const loggedInUserId = req.user; // req.user is already the user ID from auth middleware
+
+    // Check if user is trying to update their own profile
+    if (userId !== loggedInUserId) {
+      return res.status(403).json({
+        message: "You can only update your own profile.",
+        success: false,
+      });
+    }
+
+    // Validation
+    if (!name || name.trim() === "") {
+      return res.status(400).json({
+        message: "Name cannot be empty.",
+        success: false,
+      });
+    }
+
+    if (!username || username.trim() === "") {
+      return res.status(400).json({
+        message: "Username cannot be empty.",
+        success: false,
+      });
+    }
+
+    // Check username format (alphanumeric and underscores only)
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if (!usernameRegex.test(username)) {
+      return res.status(400).json({
+        message: "Username can only contain letters, numbers, and underscores.",
+        success: false,
+      });
+    }
+
+    // Check bio length
+    if (bio && bio.length > 160) {
+      return res.status(400).json({
+        message: "Bio cannot exceed 160 characters.",
+        success: false,
+      });
+    }
+
+    // Check if username is already taken by another user
+    const existingUser = await User.findOne({
+      username: username,
+      _id: { $ne: userId },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Username is already taken.",
+        success: false,
+      });
+    }
+
+    // Update user profile
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        name: name.trim(),
+        username: username.trim(),
+        bio: bio ? bio.trim() : "",
+        profileImageUrl: profileImageUrl || "",
+        bannerUrl: bannerUrl || "",
+      },
+      { new: true, select: "-password" }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Profile updated successfully.",
+      success: true,
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log("Update Profile Error:", error);
+    return res.status(500).json({
+      message: "Error updating profile.",
+      success: false,
+    });
+  }
+};

@@ -33,6 +33,19 @@ const userSchema = new mongoose.Schema(
       type: Array,
       default: [], //If value not provided, defaults to empty array
     },
+    bio: {
+      type: String,
+      default: "",
+      maxlength: 160,
+    },
+    profileImageUrl: {
+      type: String,
+      default: "",
+    },
+    bannerUrl: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

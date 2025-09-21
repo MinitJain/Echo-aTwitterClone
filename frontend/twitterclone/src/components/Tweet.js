@@ -126,17 +126,6 @@ const Tweet = ({ tweet }) => {
 
             {/* Actions */}
             <div className="flex justify-around mt-3 text-gray-500">
-              {/* comment */}
-              <button
-                className="flex items-center space-x-1 rounded-full p-2
-                           hover:bg-blue-50 hover:text-blue-500
-                           transition-all duration-200 ease-out
-                           hover:scale-[1.05] active:scale-[0.95]"
-              >
-                <RiChat1Line size={18} />
-                <span className="text-sm">12</span>
-              </button>
-
               {/* like */}
               <button
                 onClick={() => likeOrDislikeHandler(tweet?._id)}
