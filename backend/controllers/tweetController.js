@@ -36,13 +36,37 @@ export const createTweet = async (req, res) => {
 export const deleteTweet = async (req, res) => {
   try {
     const { id } = req.params;
+    const loggedInUserId = req.user; // From auth middleware
+
+    // Find the tweet first to check ownership
+    const tweet = await Tweet.findById(id);
+    if (!tweet) {
+      return res.status(404).json({
+        message: "Tweet not found.",
+        success: false,
+      });
+    }
+
+    // Check if the logged-in user is the owner of the tweet
+    if (tweet.userId.toString() !== loggedInUserId) {
+      return res.status(403).json({
+        message: "You can only delete your own tweets.",
+        success: false,
+      });
+    }
+
+    // Delete the tweet
     await Tweet.findByIdAndDelete(id);
     return res.status(200).json({
       message: "Tweet deleted successfully.",
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.log("Delete Tweet Error:", error);
+    return res.status(500).json({
+      message: "Error deleting tweet.",
+      success: false,
+    });
   }
 };
 

@@ -68,7 +68,15 @@ const CreatePost = () => {
       </div>
       <div>
         <div className="flex m-4">
-          <Avatar name={user?.name || "Guest"} size="40" round={true} />
+          {user?.profileImageUrl ? (
+            <img
+              src={user.profileImageUrl}
+              alt={user.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          ) : (
+            <Avatar name={user?.name || "Guest"} size="40" round={true} />
+          )}
           <input
             value={description}
             onChange={(e) => setDescription(e.target.value)}

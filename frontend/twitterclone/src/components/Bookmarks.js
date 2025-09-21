@@ -66,17 +66,26 @@ const Bookmarks = () => {
     fetchBookmarkedTweets();
   }, [user?.bookmarks]);
 
-  // Listen for bookmark updates and refresh the list
+  // Listen for bookmark updates and tweet deletions
   useEffect(() => {
     const handleBookmarkUpdate = () => {
       fetchBookmarkedTweets();
     };
 
-    // Add event listener for bookmark updates
+    const handleTweetDeleted = (event) => {
+      const deletedTweetId = event.detail.tweetId;
+      setBookmarkedTweets((prevTweets) =>
+        prevTweets.filter((tweet) => tweet._id !== deletedTweetId)
+      );
+    };
+
+    // Add event listeners
     window.addEventListener("bookmarkUpdated", handleBookmarkUpdate);
+    window.addEventListener("tweetDeleted", handleTweetDeleted);
 
     return () => {
       window.removeEventListener("bookmarkUpdated", handleBookmarkUpdate);
+      window.removeEventListener("tweetDeleted", handleTweetDeleted);
     };
   }, []);
 

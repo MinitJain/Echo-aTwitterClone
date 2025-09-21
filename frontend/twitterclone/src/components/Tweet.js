@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import Avatar from "react-avatar";
-import {
-  RiChat1Line,
-  RiHeart3Line,
-  RiHeart3Fill,
-  RiBookmarkLine,
-} from "react-icons/ri";
+import { RiHeart3Line, RiHeart3Fill, RiBookmarkLine } from "react-icons/ri";
 import { MdDeleteOutline } from "react-icons/md";
-import { BsThreeDots } from "react-icons/bs"; // three dots icon
 import axios from "axios";
 import { TWEET_API_END_POINT, USER_API_END_POINT } from "../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,21 +12,20 @@ import { bookmarkUpdate } from "../redux/userSlice";
 const Tweet = ({ tweet }) => {
   const { user } = useSelector((store) => store.user);
   const [likes, setLikes] = useState(tweet?.likes || []);
-  const [showMenu, setShowMenu] = useState(false); // toggle dropdown
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [tweetToDelete, setTweetToDelete] = useState(null);
 
   const dispatch = useDispatch();
 
+  // Like/Dislike handler
   const likeOrDislikeHandler = async (id) => {
     try {
       const alreadyLiked = likes.includes(user?._id);
-      let updatedLikes;
+      const updatedLikes = alreadyLiked
+        ? likes.filter((uid) => uid !== user._id)
+        : [...likes, user._id];
 
-      if (alreadyLiked) {
-        updatedLikes = likes.filter((uid) => uid !== user._id);
-      } else {
-        updatedLikes = [...likes, user._id];
-      }
-      setLikes(updatedLikes); // update UI instantly
+      setLikes(updatedLikes);
 
       const res = await axios.put(
         `${TWEET_API_END_POINT}/like/${id}`,
@@ -41,27 +34,27 @@ const Tweet = ({ tweet }) => {
       );
 
       if (res.data.success) {
-        dispatch(getRefresh()); // refetch fresh data
+        dispatch(getRefresh());
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
-      console.log(error);
+      console.error(error);
     }
   };
+
+  // Delete handler
   const deleteTweetHandler = async (id) => {
     try {
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete this tweet?"
-      );
-      if (!confirmDelete) return;
-
       const res = await axios.delete(`${TWEET_API_END_POINT}/delete/${id}`, {
         withCredentials: true,
       });
 
       if (res.data.success) {
-        toast.success("Tweet deleted!");
-        dispatch(getRefresh()); // re-fetch tweets
+        toast.success("Tweet deleted successfully!");
+        dispatch(getRefresh());
+        window.dispatchEvent(
+          new CustomEvent("tweetDeleted", { detail: { tweetId: id } })
+        );
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to delete tweet");
@@ -69,7 +62,7 @@ const Tweet = ({ tweet }) => {
     }
   };
 
-  // Handle bookmarking and unbookmarking of tweets
+  // Bookmark handler
   const bookmarkHandler = async (tweetId) => {
     if (!user) {
       toast.error("Please login to bookmark tweets");
@@ -77,10 +70,8 @@ const Tweet = ({ tweet }) => {
     }
 
     try {
-      // update UI
       dispatch(bookmarkUpdate(tweetId));
 
-      // Make API call to update bookmark on the server
       const res = await axios.put(
         `${USER_API_END_POINT}/bookmark/${tweetId}`,
         { id: user?._id },
@@ -89,13 +80,11 @@ const Tweet = ({ tweet }) => {
 
       if (res.data.success) {
         dispatch(getRefresh());
-        // Dispatch custom event to notify other components
         window.dispatchEvent(new CustomEvent("bookmarkUpdated"));
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to bookmark tweet");
-      // Revert optimistic update
-      dispatch(bookmarkUpdate(tweetId));
+      dispatch(bookmarkUpdate(tweetId)); // revert optimistic update
       console.error("Bookmark error:", error);
     }
   };
@@ -105,12 +94,19 @@ const Tweet = ({ tweet }) => {
       <div className="bg-white shadow-sm hover:shadow-md transition rounded-2xl p-4 mb-4 border border-gray-100">
         <div className="flex items-start space-x-3">
           {/* Avatar */}
-          <Avatar
-            src=""
-            name={tweet?.userDetails?.[0]?.name || "User"}
-            size="40"
-            round={true}
-          />
+          {tweet?.userDetails?.[0]?.profileImageUrl ? (
+            <img
+              src={tweet.userDetails[0].profileImageUrl}
+              alt={tweet.userDetails[0].name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          ) : (
+            <Avatar
+              name={tweet?.userDetails?.[0]?.name || "User"}
+              size="40"
+              round={true}
+            />
+          )}
 
           <div className="w-full">
             {/* Header */}
@@ -176,34 +172,53 @@ const Tweet = ({ tweet }) => {
                   {user?.bookmarks?.includes(tweet?._id) ? "Saved" : "Save"}
                 </span>
               </button>
+
+              {/* delete - only show for tweet owner */}
+              {user?._id === tweet?.userId?._id && (
+                <button
+                  onClick={() => {
+                    setTweetToDelete(tweet._id);
+                    setShowDeleteConfirm(true);
+                  }}
+                  className="flex items-center space-x-1 rounded-full p-2
+                             hover:bg-red-50 hover:text-red-500
+                             transition-all duration-200 ease-out
+                             hover:scale-[1.05] active:scale-[0.95]"
+                >
+                  <MdDeleteOutline size={18} />
+                  <span className="text-sm">Delete</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3 dots menu only for owner */}
-      {user?._id === tweet?.userId?._id && (
-        <div className="absolute top-3 right-5">
-          <div
-            onClick={() => setShowMenu((prev) => !prev)}
-            className="rounded-full cursor-pointer p-2 hover:bg-gray-100 transition"
-          >
-            <BsThreeDots size={20} />
-          </div>
-
-          {showMenu && (
-            <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-md">
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-[90%] max-w-md">
+            <h2 className="text-lg font-semibold mb-4">
+              Are you sure you want to delete this tweet?
+            </h2>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
               <button
                 onClick={() => {
-                  deleteTweetHandler(tweet?._id);
-                  setShowMenu(false);
+                  deleteTweetHandler(tweetToDelete);
+                  setShowDeleteConfirm(false);
                 }}
-                className="flex items-center px-3 py-2 text-sm text-red-500 hover:bg-red-50 w-full"
+                className="px-4 py-2 rounded-full bg-red-500 text-white hover:bg-red-600"
               >
-                <MdDeleteOutline className="mr-2" /> Delete
+                Delete
               </button>
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>
