@@ -4,6 +4,7 @@ import {
   deleteTweet,
   getAllTweets,
   getFollowingTweets,
+  getTweetById,
   likeorDislikeTweet,
 } from "../controllers/tweetController.js";
 import isAuthenticated from "../config/auth.js";
@@ -15,5 +16,6 @@ router.delete("/delete/:id", isAuthenticated, deleteTweet);
 router.put("/like/:id", isAuthenticated, likeorDislikeTweet);
 router.get("/allTweets", isAuthenticated, getAllTweets);
 router.get("/followingtweets/:id", isAuthenticated, getFollowingTweets);
+router.get("/tweet/:id", isAuthenticated, getTweetById);
 
 export default router;

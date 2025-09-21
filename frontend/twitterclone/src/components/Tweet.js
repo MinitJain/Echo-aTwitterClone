@@ -89,6 +89,8 @@ const Tweet = ({ tweet }) => {
 
       if (res.data.success) {
         dispatch(getRefresh());
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent("bookmarkUpdated"));
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to bookmark tweet");

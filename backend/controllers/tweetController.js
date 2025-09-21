@@ -138,3 +138,33 @@ export const getFollowingTweets = async (req, res) => {
     });
   }
 };
+
+export const getTweetById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const tweet = await Tweet.findById(id).populate(
+      "userId",
+      "name username profileImageUrl bannerUrl bio"
+    );
+
+    if (!tweet) {
+      return res.status(404).json({
+        message: "Tweet not found.",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Tweet fetched successfully.",
+      success: true,
+      tweet: tweet,
+    });
+  } catch (error) {
+    console.log("getTweetById Error:", error);
+    return res.status(500).json({
+      message: "Error in fetching tweet.",
+      success: false,
+    });
+  }
+};

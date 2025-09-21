@@ -100,7 +100,10 @@ const LeftSidebar = () => {
               </div>
             </Link>
           )}
-          <div className="SideBar flex items-center my-2 hover:bg-gray-100 active:bg-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95">
+          <Link
+            to="/bookmarks"
+            className="SideBar flex items-center my-2 hover:bg-gray-100 active:bg-gray-200 p-2 rounded-lg cursor-pointer transition-all duration-200 active:scale-95"
+          >
             <RiBookmarkLine
               size={24}
               className="group-hover:scale-110 text-gray-800"
@@ -108,7 +111,7 @@ const LeftSidebar = () => {
             <div className="font-semibold text-lg ml-2 text-gray-800">
               Bookmarks
             </div>
-          </div>
+          </Link>
 
           <div
             onClick={logoutHandler}
