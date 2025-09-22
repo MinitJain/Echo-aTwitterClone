@@ -55,9 +55,6 @@ const Profile = () => {
       console.log(error);
     }
   };
-  // Debug
-  console.log("Profile route ID:", id);
-  console.log("Using userId:", userId);
 
   // Fetch profile data
   useGetProfile(userId);
@@ -134,9 +131,7 @@ const Profile = () => {
             <h1 className="text-xl font-bold">{profile?.name}</h1>
             <p className="text-gray-500">@{profile?.username}</p>
             <div className="mt-4">
-              <p className="text-gray-800 text-sm">
-                {profile?.bio || "No bio available"}
-              </p>
+              <p className="text-gray-800 text-sm">{profile?.bio || ""}</p>
             </div>
           </div>
         </div>

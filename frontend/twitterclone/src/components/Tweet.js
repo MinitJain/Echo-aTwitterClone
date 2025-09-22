@@ -17,7 +17,6 @@ const Tweet = ({ tweet }) => {
 
   const dispatch = useDispatch();
 
-  // Like/Dislike handler
   const likeOrDislikeHandler = async (id) => {
     try {
       const alreadyLiked = likes.includes(user?._id);
@@ -33,22 +32,18 @@ const Tweet = ({ tweet }) => {
         { withCredentials: true }
       );
 
-      if (res.data.success) {
-        dispatch(getRefresh());
-      }
+      if (res.data.success) dispatch(getRefresh());
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
       console.error(error);
     }
   };
 
-  // Delete handler
   const deleteTweetHandler = async (id) => {
     try {
       const res = await axios.delete(`${TWEET_API_END_POINT}/delete/${id}`, {
         withCredentials: true,
       });
-
       if (res.data.success) {
         toast.success("Tweet deleted successfully!");
         dispatch(getRefresh());
@@ -62,7 +57,6 @@ const Tweet = ({ tweet }) => {
     }
   };
 
-  // Bookmark handler
   const bookmarkHandler = async (tweetId) => {
     if (!user) {
       toast.error("Please login to bookmark tweets");
@@ -89,6 +83,8 @@ const Tweet = ({ tweet }) => {
     }
   };
 
+  const tweetUser = tweet?.userId; // populated user info
+
   return (
     <div className="relative">
       <article className="bg-white border-b border-gray-100 hover:bg-gray-50/50 transition-all duration-200 group">
@@ -96,15 +92,15 @@ const Tweet = ({ tweet }) => {
           <div className="flex gap-4">
             {/* Avatar */}
             <div className="flex-shrink-0">
-              {tweet?.userDetails?.[0]?.profileImageUrl ? (
+              {tweetUser?.profileImageUrl ? (
                 <img
-                  src={tweet.userDetails[0].profileImageUrl}
-                  alt={tweet.userDetails[0].name}
+                  src={tweetUser.profileImageUrl}
+                  alt={tweetUser.name}
                   className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm"
                 />
               ) : (
                 <Avatar
-                  name={tweet?.userDetails?.[0]?.name || "User"}
+                  name={tweetUser?.name || "User"}
                   size="48"
                   round={true}
                   className="ring-2 ring-white shadow-sm"
@@ -116,10 +112,10 @@ const Tweet = ({ tweet }) => {
               {/* Header */}
               <div className="flex items-center gap-2 mb-2">
                 <h2 className="font-semibold text-gray-900 text-[15px] tracking-[-0.01em] truncate">
-                  {tweet?.userDetails?.[0]?.name}
+                  {tweetUser?.name}
                 </h2>
                 <span className="text-gray-500 text-[14px] truncate">
-                  @{tweet?.userDetails?.[0]?.username}
+                  @{tweetUser?.username}
                 </span>
               </div>
 
@@ -133,12 +129,12 @@ const Tweet = ({ tweet }) => {
               {/* Actions */}
               <div
                 className={`flex items-center ${
-                  user?._id === tweet?.userId?._id
+                  user?._id === tweetUser?._id
                     ? "justify-between"
                     : "justify-center gap-8"
                 } mt-2`}
               >
-                {/* Like Button */}
+                {/* Like */}
                 <button
                   onClick={() => likeOrDislikeHandler(tweet?._id)}
                   className="group/like flex items-center gap-2 px-4 py-2 rounded-full hover:bg-red-50 transition-all duration-200 active:scale-95"
@@ -162,7 +158,7 @@ const Tweet = ({ tweet }) => {
                   </span>
                 </button>
 
-                {/* Bookmark Button */}
+                {/* Bookmark */}
                 <button
                   onClick={() => bookmarkHandler(tweet?._id)}
                   className="group/bookmark flex items-center gap-2 px-4 py-2 rounded-full hover:bg-blue-50 transition-all duration-200 active:scale-95"
@@ -186,8 +182,8 @@ const Tweet = ({ tweet }) => {
                   </span>
                 </button>
 
-                {/* Delete Button - only show for tweet owner */}
-                {user?._id === tweet?.userId?._id && (
+                {/* Delete */}
+                {user?._id === tweetUser?._id && (
                   <button
                     onClick={() => {
                       setTweetToDelete(tweet._id);
@@ -210,7 +206,7 @@ const Tweet = ({ tweet }) => {
         </div>
       </article>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 transform transition-all">

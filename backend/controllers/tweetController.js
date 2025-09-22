@@ -1,6 +1,5 @@
 import { User } from "../models/userSchema.js";
 import { Tweet } from "../models/tweetSchema.js";
-import { getOtherUserProfile } from "./userController.js";
 
 export const createTweet = async (req, res) => {
   try {
@@ -12,12 +11,20 @@ export const createTweet = async (req, res) => {
         success: false,
       });
     }
-    const user = await User.findById(id).select("-password");
 
+    // Verify user exists
+    const user = await User.findById(id).select("_id");
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    // Only store userId reference (no snapshot)
     await Tweet.create({
       description,
       userId: id,
-      userDetails: user,
     });
 
     return res.status(201).json({
@@ -38,7 +45,6 @@ export const deleteTweet = async (req, res) => {
     const { id } = req.params;
     const loggedInUserId = req.user; // From auth middleware
 
-    // Find the tweet first to check ownership
     const tweet = await Tweet.findById(id);
     if (!tweet) {
       return res.status(404).json({
@@ -47,7 +53,6 @@ export const deleteTweet = async (req, res) => {
       });
     }
 
-    // Check if the logged-in user is the owner of the tweet
     if (tweet.userId.toString() !== loggedInUserId) {
       return res.status(403).json({
         message: "You can only delete your own tweets.",
@@ -55,7 +60,6 @@ export const deleteTweet = async (req, res) => {
       });
     }
 
-    // Delete the tweet
     await Tweet.findByIdAndDelete(id);
     return res.status(200).json({
       message: "Tweet deleted successfully.",
@@ -112,9 +116,8 @@ export const likeorDislikeTweet = async (req, res) => {
 
 export const getAllTweets = async (req, res) => {
   try {
-    // Fetch all tweets, newest first
     const allTweets = await Tweet.find()
-      .populate("userId", "name username") // optional: get user info
+      .populate("userId", "name username profileImageUrl bannerUrl bio") // Always latest data
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -146,11 +149,11 @@ export const getFollowingTweets = async (req, res) => {
     const followingUsersTweets = await Tweet.find({
       userId: { $in: loggedInUser.following },
     })
-      .populate("userId", "name username")
+      .populate("userId", "name username profileImageUrl bannerUrl bio")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
-      message: "All tweets fetched successfully.",
+      message: "All following tweets fetched successfully.",
       success: true,
       tweets: followingUsersTweets,
     });
