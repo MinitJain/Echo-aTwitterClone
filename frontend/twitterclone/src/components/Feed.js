@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 const Feed = () => {
   const { tweets } = useSelector((store) => store.tweet);
   return (
-    <div className="w-[50%] ">
+    <div className="w-[45%] min-w-[500px]">
       <div>
         <CreatePost />
         {Array.isArray(tweets) && tweets.length > 0 ? (

@@ -13,10 +13,10 @@ const Home = () => {
   //custom hooks
   useOtherUsers(user?._id);
   useGetTweets(user?._id);
-  console.log("Redux otherUsers:", otherUsers);
+  // console.log("Redux otherUsers:", otherUsers);
 
   return (
-    <div className="Home flex justify-between max-w-7xl w-[100%] mx-auto ">
+    <div className="Home flex justify-between max-w-[1400px] w-[100%] mx-auto">
       <LeftSidebar />
       <Outlet />
       <RightSideBar otherUsers={otherUsers} />
