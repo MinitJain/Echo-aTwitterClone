@@ -55,7 +55,7 @@ const RightSideBar = ({ otherUsers }) => {
   };
 
   return (
-    <div className="w-[25%] min-w-[280px] max-w-[320px] min-h-screen px-6 py-8 hidden lg:block">
+    <div className="w-[30%] min-w-[320px] max-w-[400px] min-h-screen px-6 py-8 hidden lg:block">
       {/* Search Box */}
       <div className="relative mb-6">
         <CiSearch

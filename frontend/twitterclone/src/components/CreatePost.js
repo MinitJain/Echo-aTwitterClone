@@ -113,15 +113,15 @@ const CreatePost = () => {
             />
 
             {/* Bottom Actions */}
-            <div className="flex items-center justify-between mt-4">
-              <button className="p-2.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all duration-200 active:scale-95">
+            <div className="flex items-center justify-end mt-4">
+              {/* <button className="p-2.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all duration-200 active:scale-95">
                 <CiImageOn size={22} />
-              </button>
+              </button> */}
 
               <button
                 onClick={submitHandler}
                 disabled={loading || !description.trim()}
-                className={`px-6 py-2.5 font-medium text-[15px] rounded-full transition-all duration-200 active:scale-[0.98] tracking-[-0.01em] ${
+                className={`px-6 py-2.5  font-medium text-[15px] rounded-full transition-all duration-200 active:scale-[0.98] tracking-[-0.01em] ${
                   loading || !description.trim()
                     ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                     : "bg-gray-900 text-white hover:bg-gray-800 shadow-sm hover:shadow-md"

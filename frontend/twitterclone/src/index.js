@@ -2,15 +2,24 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import "./index.css";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { CopilotKit } from "@copilotkit/react-core";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <CopilotKit
+      publicApiKey="ck_pub_00828bb5867d63cbfb2bbc6f1352e642"
+      chatApiEndpoint="/api/chat" // You can customize this endpoint
+      apiConfiguration={{
+        // Add your API configuration here if needed
+        debug: true, // Enable debug mode for development
+      }}
+    >
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </CopilotKit>
   </React.StrictMode>
 );
