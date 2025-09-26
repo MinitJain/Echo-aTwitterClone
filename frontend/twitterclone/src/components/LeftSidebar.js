@@ -1,4 +1,3 @@
-import React from "react";
 import {
   RiHome5Line,
   RiHashtag,

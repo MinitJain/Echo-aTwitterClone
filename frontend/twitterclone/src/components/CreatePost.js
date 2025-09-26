@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Avatar from "react-avatar";
-import { CiImageOn } from "react-icons/ci";
 import { TWEET_API_END_POINT } from "../utils/constant";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllTweets, getIsActive, getRefresh } from "../redux/tweetSlice";
+import { getIsActive, getRefresh } from "../redux/tweetSlice";
 
 const CreatePost = () => {
   const [description, setDescription] = useState("");

@@ -80,7 +80,7 @@ const Profile = () => {
           </Link>
           <div>
             <h1 className="font-bold text-lg">{profile?.name}</h1>
-            <p className="text-gray-500 text-md">10 posts</p>
+            {/* <p className="text-gray-500 text-md">10 posts</p> */}
           </div>
         </div>
 

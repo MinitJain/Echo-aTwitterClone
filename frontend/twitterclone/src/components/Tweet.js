@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { getRefresh } from "../redux/tweetSlice";
 import { bookmarkUpdate } from "../redux/userSlice";
+import { Link } from "react-router-dom";
 
 const Tweet = ({ tweet }) => {
   const { user } = useSelector((store) => store.user);
@@ -91,32 +92,36 @@ const Tweet = ({ tweet }) => {
         <div className="p-6">
           <div className="flex gap-4">
             {/* Avatar */}
-            <div className="flex-shrink-0">
-              {tweetUser?.profileImageUrl ? (
-                <img
-                  src={tweetUser.profileImageUrl}
-                  alt={tweetUser.name}
-                  className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm"
-                />
-              ) : (
-                <Avatar
-                  name={tweetUser?.name || "User"}
-                  size="48"
-                  round={true}
-                  className="ring-2 ring-white shadow-sm"
-                />
-              )}
-            </div>
+            <Link to={`/profile/${tweetUser?._id}`}>
+              <div className="flex-shrink-0">
+                {tweetUser?.profileImageUrl ? (
+                  <img
+                    src={tweetUser.profileImageUrl}
+                    alt={tweetUser.name}
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm"
+                  />
+                ) : (
+                  <Avatar
+                    name={tweetUser?.name || "User"}
+                    size="48"
+                    round={true}
+                    className="ring-2 ring-white shadow-sm"
+                  />
+                )}
+              </div>
+            </Link>
 
             <div className="flex-1 min-w-0">
-              {/* Header */}
               <div className="flex items-center gap-2 mb-2">
-                <h2 className="font-semibold text-gray-900 text-[15px] tracking-[-0.01em] truncate">
-                  {tweetUser?.name}
-                </h2>
-                <span className="text-gray-500 text-[14px] truncate">
-                  @{tweetUser?.username}
-                </span>
+                <Link to={`/profile/${tweetUser?._id}`}>
+                  <h2 className="font-semibold text-gray-900 text-[15px] tracking-[-0.01em] truncate">
+                    {tweetUser?.name}
+                  </h2>
+
+                  <span className="text-gray-500 text-[14px] truncate">
+                    @{tweetUser?.username}
+                  </span>
+                </Link>
               </div>
 
               {/* Content */}

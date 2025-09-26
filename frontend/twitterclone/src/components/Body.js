@@ -1,4 +1,3 @@
-//body.js
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Home from "./Home";

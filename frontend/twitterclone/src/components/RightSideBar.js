@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import Avatar from "react-avatar";
 import { Link } from "react-router-dom";
@@ -36,17 +36,15 @@ const RightSideBar = ({ otherUsers }) => {
     }
   };
 
-  // Handle search input changes
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
-    // Filter users based on search query
     if (query.trim()) {
       const filtered = otherUsers.filter(
-        (user) =>
-          user.name.toLowerCase().includes(query.toLowerCase()) ||
-          user.username.toLowerCase().includes(query.toLowerCase())
+        (otherUser) =>
+          otherUser.name.toLowerCase().includes(query.toLowerCase()) ||
+          otherUser.username.toLowerCase().includes(query.toLowerCase())
       );
       setSearchResults(filtered);
     } else {
@@ -78,30 +76,41 @@ const RightSideBar = ({ otherUsers }) => {
             Search Results
           </h2>
           <div className="space-y-3">
-            {searchResults.map((user) => (
+            {searchResults.map((otherUser) => (
               <div
-                key={user._id}
+                key={otherUser._id}
                 className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-xl transition-all duration-200 group gap-3"
               >
                 <div className="flex items-center min-w-0 flex-1">
                   <div className="flex-shrink-0">
-                    <Avatar
-                      name={user.name}
-                      size="44"
-                      round={true}
-                      className="ring-2 ring-white shadow-sm"
-                    />
+                    {otherUser?.profileImageUrl ? (
+                      <img
+                        src={otherUser.profileImageUrl}
+                        alt={otherUser.name}
+                        className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm"
+                      />
+                    ) : (
+                      <Avatar
+                        name={otherUser?.name || "Guest"}
+                        size="48"
+                        round={true}
+                        className="ring-2 ring-white shadow-sm"
+                      />
+                    )}
                   </div>
                   <div className="ml-3 min-w-0 flex-1">
                     <h3 className="font-semibold text-gray-900 text-[15px] tracking-[-0.01em] truncate">
-                      {user.name}
+                      {otherUser.name}
                     </h3>
                     <p className="text-sm text-gray-500 truncate">
-                      @{user.username}
+                      @{otherUser.username}
                     </p>
                   </div>
                 </div>
-                <Link to={`/profile/${user?._id}`} className="flex-shrink-0">
+                <Link
+                  to={`/profile/${otherUser._id}`}
+                  className="flex-shrink-0"
+                >
                   <button className="bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 active:scale-[0.98] tracking-[-0.01em]">
                     View
                   </button>
@@ -112,12 +121,11 @@ const RightSideBar = ({ otherUsers }) => {
         </div>
       )}
 
-      {/* Suggested for You section */}
+      {/* Suggested for You */}
       <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-900 mb-4 tracking-[-0.01em]">
           Suggested for You
         </h2>
-
         {otherUsers && otherUsers.length > 0 ? (
           <div className="space-y-3">
             {otherUsers.map((otherUser) => (
@@ -126,16 +134,24 @@ const RightSideBar = ({ otherUsers }) => {
                 className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-xl transition-all duration-200 group gap-3"
               >
                 <Link
-                  to={`/profile/${otherUser?._id}`}
+                  to={`/profile/${otherUser._id}`}
                   className="flex items-center min-w-0 flex-1"
                 >
                   <div className="flex-shrink-0">
-                    <Avatar
-                      name={otherUser.name}
-                      size="44"
-                      round={true}
-                      className="ring-2 ring-white shadow-sm"
-                    />
+                    {otherUser?.profileImageUrl ? (
+                      <img
+                        src={otherUser.profileImageUrl}
+                        alt={otherUser.name}
+                        className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm"
+                      />
+                    ) : (
+                      <Avatar
+                        name={otherUser?.name || "Guest"}
+                        size="48"
+                        round={true}
+                        className="ring-2 ring-white shadow-sm"
+                      />
+                    )}
                   </div>
                   <div className="ml-3 min-w-0 flex-1">
                     <h3 className="font-semibold text-gray-900 text-[15px] tracking-[-0.01em] group-hover:text-gray-700 transition-colors truncate">
