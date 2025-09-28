@@ -25,8 +25,7 @@ app.use(cookieParser()); // Parses cookies
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
-  "https://echo-a-twitter-clone.vercel.app",
-  "https://echo-atwitterclone.vercel.app",
+  "https://echo-frontend-rose.vercel.app",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
