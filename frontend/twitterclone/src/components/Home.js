@@ -1,4 +1,3 @@
-import React from "react";
 import LeftSidebar from "./LeftSidebar";
 import RightSideBar from "./RightSideBar";
 import { Outlet, useNavigate } from "react-router-dom";

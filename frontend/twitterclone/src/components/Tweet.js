@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Avatar from "react-avatar";
 import { RiHeart3Line, RiHeart3Fill, RiBookmarkLine } from "react-icons/ri";
 import { MdDeleteOutline } from "react-icons/md";
-import axios from "axios";
-import { TWEET_API_END_POINT, USER_API_END_POINT } from "../utils/constant";
+import API from "../api/axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { getRefresh } from "../redux/tweetSlice";
@@ -27,11 +26,7 @@ const Tweet = ({ tweet }) => {
 
       setLikes(updatedLikes);
 
-      const res = await axios.put(
-        `${TWEET_API_END_POINT}/like/${id}`,
-        { id: user?._id },
-        { withCredentials: true }
-      );
+      const res = await API.put(`/api/v1/tweet/like/${id}`, { id: user?._id });
 
       if (res.data.success) dispatch(getRefresh());
     } catch (error) {
@@ -42,9 +37,7 @@ const Tweet = ({ tweet }) => {
 
   const deleteTweetHandler = async (id) => {
     try {
-      const res = await axios.delete(`${TWEET_API_END_POINT}/delete/${id}`, {
-        withCredentials: true,
-      });
+      const res = await API.delete(`/api/v1/tweet/delete/${id}`);
       if (res.data.success) {
         toast.success("Tweet deleted successfully!");
         dispatch(getRefresh());
@@ -67,11 +60,9 @@ const Tweet = ({ tweet }) => {
     try {
       dispatch(bookmarkUpdate(tweetId));
 
-      const res = await axios.put(
-        `${USER_API_END_POINT}/bookmark/${tweetId}`,
-        { id: user?._id },
-        { withCredentials: true }
-      );
+      const res = await API.put(`/api/v1/user/bookmark/${tweetId}`, {
+        id: user?._id,
+      });
 
       if (res.data.success) {
         dispatch(getRefresh());

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { TWEET_API_END_POINT } from "../utils/constant";
 import Tweet from "./Tweet";
 import toast from "react-hot-toast";
-import { getRefresh } from "../redux/tweetSlice";
 
 const Bookmarks = () => {
   const { user } = useSelector((store) => store.user);

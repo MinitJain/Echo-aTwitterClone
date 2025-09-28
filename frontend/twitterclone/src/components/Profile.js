@@ -4,9 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import useGetProfile from "../Hooks/useGetProfile";
-import axios from "axios";
-import { USER_API_END_POINT } from "../utils/constant";
-import toast from "react-hot-toast";
+import API from "../api/axios";
 import { followingUpdate } from "../redux/userSlice";
 import { getRefresh } from "../redux/tweetSlice";
 import EditProfile from "./EditProfile";
@@ -24,21 +22,17 @@ const Profile = () => {
     try {
       if (user.following.includes(id)) {
         // Unfollow
-        const res = await axios.post(
-          `${USER_API_END_POINT}/unfollow/${id}`,
-          { id: user?._id },
-          { withCredentials: true }
-        );
+        const res = await API.post(`/api/v1/user/unfollow/${id}`, {
+          id: user?._id,
+        });
         dispatch(followingUpdate(id));
         dispatch(getRefresh());
         // toast.success(res.data.message || "User Unfollowed!");
       } else {
         // Follow
-        const res = await axios.post(
-          `${USER_API_END_POINT}/follow/${id}`,
-          { id: user?._id },
-          { withCredentials: true }
-        );
+        const res = await API.post(`/api/v1/user/follow/${id}`, {
+          id: user?._id,
+        });
 
         // Only update the state if the follow request was successful
         if (res.data.success) {
