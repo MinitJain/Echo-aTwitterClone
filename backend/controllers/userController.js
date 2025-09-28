@@ -113,6 +113,8 @@ export const Login = async (req, res) => {
       .status(200)
       .cookie("token", token, {
         httpOnly: true,
+        secure: true, // Required for production HTTPS
+        sameSite: "none", // Required for cross-origin cookies
         maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
       })
       .json({
@@ -134,6 +136,8 @@ export const logout = async (req, res) => {
   return res
     .cookie("token", "", {
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
       expires: new Date(0), // Expire it immediately
     })
     .status(200)
