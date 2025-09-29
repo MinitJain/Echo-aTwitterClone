@@ -39,18 +39,38 @@ export const Register = async (req, res) => {
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     // Create and save the new user
-    await User.create({
+    const newUser = await User.create({
       name,
       username,
       email,
       password: hashedPassword,
     });
 
-    // Success response
-    return res.status(201).json({
-      message: "Account created successfully.",
-      success: true,
-    });
+    // Generate JWT token
+    const token = await jwt.sign(
+      { id: newUser._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    // Remove password from user object
+    const { password: _, ...userWithoutPassword } = newUser.toObject();
+    const user = { ...userWithoutPassword, id: newUser._id.toString() };
+
+    // Set cookie and return user
+    return res
+      .status(201)
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .json({
+        message: "Account created successfully.",
+        success: true,
+        user,
+      });
   } catch (error) {
     console.error("Registration Error:", error);
     return res.status(500).json({

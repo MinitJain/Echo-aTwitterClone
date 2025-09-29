@@ -96,7 +96,10 @@ const Login = () => {
         );
 
         if (res.data.success) {
-          setIsLogin(true);
+          // Automatically log in after signup
+          dispatch(getUser(res?.data?.user));
+          localStorage.setItem("user", JSON.stringify(res?.data?.user));
+          navigate("/");
           toast.success(res.data.message);
         }
       } catch (error) {
