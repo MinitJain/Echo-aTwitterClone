@@ -4,16 +4,31 @@ import dotenv from "dotenv";
 //   path: ".env",
 // });
 dotenv.config(); // Loads environment variables from a .env file into process.env
-const databaseConnection = () => {
-  mongoose
-    .connect(process.env.MONGO_URI) //Connects to your MongoDB database using the connection string from environment variables
-    // Uses promises to handle success/error cases
-    .then(() => {
-      console.log("Connected to mongoDB"); //Logs the connection status
-    })
-    .catch((error) => {
-      console.log(error); // Logs the connection status
-    });
+
+// Validate required environment variables
+if (!process.env.MONGO_URI) {
+  throw new Error("Missing required environment variable: MONGO_URI");
+}
+
+// MongoDB connection with retry logic
+const MAX_RETRIES = 5;
+const RETRY_DELAY_MS = 2000;
+
+const databaseConnection = async (retries = 0) => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    // Use a logger here instead of console.log
+    // logger.info("Connected to mongoDB");
+  } catch (error) {
+    // logger.error("MongoDB connection error:", error);
+    if (retries < MAX_RETRIES) {
+      setTimeout(() => {
+        databaseConnection(retries + 1);
+      }, RETRY_DELAY_MS);
+    } else {
+      throw new Error("Failed to connect to MongoDB after multiple attempts");
+    }
+  }
 };
 
 export default databaseConnection;
