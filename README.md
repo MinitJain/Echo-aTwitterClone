@@ -1,6 +1,6 @@
-# Echo - A Twitter Clone
+# Echo 
 
-Echo is a full-stack Twitter clone built with Node.js/Express (backend) and React (frontend). The backend is designed for deployment on Render, and the frontend for Vercel. This project demonstrates modern authentication, tweet management, user profiles, bookmarks, and more.
+Echo is a full-stack microblogging platform similar to Twitter and Threads. Built with the MERN stack (MongoDB, Express, React, Node.js), it features real-time tweet posting, user authentication, profiles, and social interactions.
 
 ## Features
 - User registration, login, and JWT authentication
