@@ -40,6 +40,9 @@ FRONTEND_URL=https://your-vercel-domain.vercel.app
 ```
 REACT_APP_API_URL=https://your-backend-domain.onrender.com
 ```
+## 🔗 Live Demo
+[**View Live App**] https://echo-frontend-rose.vercel.app/login
+
 
 ### Installation
 
