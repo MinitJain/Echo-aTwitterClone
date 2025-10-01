@@ -1,118 +1,107 @@
-# ECHO – A Microblogging App
+# Echo - A Twitter Clone
 
-🎯 _Amplify your voice, spark conversations_  
-🔊 _Where your voice echoes across the digital world_
+Echo is a full-stack Twitter clone built with Node.js/Express (backend) and React (frontend). The backend is designed for deployment on Render, and the frontend for Vercel. This project demonstrates modern authentication, tweet management, user profiles, bookmarks, and more.
 
-A sophisticated social media platform built with the MERN stack (MongoDB, Express, React, Node.js), offering a modern, intuitive interface for seamless social interactions. ECHO combines powerful features with a clean, responsive design to create an engaging user experience.
+## Features
+- User registration, login, and JWT authentication
+- Secure password hashing (bcrypt)
+- Create, delete, like/dislike tweets
+- Follow/unfollow users
+- Bookmark tweets
+- Edit user profile
+- Responsive UI with Tailwind CSS
+- Rate-limited authentication endpoints
+- Secure cookies and CORS for cross-origin requests
+- Health check endpoint for backend
 
-## 🚀 Key Features
+## Tech Stack
+- **Backend:** Node.js, Express, MongoDB, Mongoose, JWT, bcryptjs
+- **Frontend:** React, Redux, Axios, Tailwind CSS
+- **Deployment:** Render (backend), Vercel (frontend)
 
-### Core Functionality
+## Getting Started
 
-- 🔐 Secure User Authentication (JWT-based)
-- 📝 Interactive Tweet Creation & Sharing
-- 🔄 Dynamic Feed System
-  - Personalized Following Feed
-  - "For You" Global Feed
-- � Rich User Interactions
-  - Follow/Unfollow Capability
-  - Like & Bookmark System
-  - Profile Customization
+### Prerequisites
+- Node.js >= 18
+- npm
+- MongoDB Atlas account (or local MongoDB)
 
-### User Experience
+### Environment Variables
 
-- 🔍 Real-time User Search
-- 👥 Smart User Suggestions
-- ⚡ Optimized Performance
-- 🎨 Clean, Modern UI with Tailwind CSS
+#### Backend (`backend/.env`)
+```
+MONGO_URI=your_mongo_uri
+PORT=8080
+JWT_SECRET=your_jwt_secret
+FRONTEND_URL=https://your-vercel-domain.vercel.app
+```
 
-### Technical Features
+#### Frontend (`frontend/twitterclone/.env`)
+```
+REACT_APP_API_URL=https://your-backend-domain.onrender.com
+```
 
-- 🛡️ Secure JWT Authentication
-- 📊 Redux State Management
-- 🔄 RESTful API Architecture
-- 💾 MongoDB Data Persistence
-- � Optimized React Components
+### Installation
 
-## 🛠️ Technical Architecture
-
-### Frontend Stack
-
-- **React.js** - Modern component architecture with hooks
-- **Redux** - Centralized state management
-- **Tailwind CSS** - Utility-first styling
-- **Axios** - Promise-based HTTP client
-- **React Router** - Dynamic routing
-
-### Backend Stack
-
-- **Node.js & Express.js** - Robust server architecture
-- **MongoDB & Mongoose** - Flexible data modeling
-- **JWT** - Secure authentication
-- **bcrypt** - Password hashing
-- **RESTful API** - Standard-compliant endpoints
-
-## � Getting Started
-
-1. **Clone the Repository**
-
-   ```bash
+1. **Clone the repository:**
+   ```sh
    git clone https://github.com/MinitJain/Echo-aTwitterClone.git
    cd Echo-aTwitterClone
    ```
 
-2. **Set Up Backend**
-
-   ```bash
-   cd backend
-   npm install
-   # Create .env file with your MongoDB URI and JWT secret
-   npm start
+2. **Install dependencies:**
+   ```sh
+   npm install --prefix backend
+   npm install --prefix frontend/twitterclone
    ```
 
-3. **Set Up Frontend**
-   ```bash
-   cd frontend/twitterclone
-   npm install
-   npm start
+3. **Build the frontend:**
+   ```sh
+   npm run build --prefix frontend/twitterclone
    ```
 
-## 📁 Project Structure
+4. **Start the backend:**
+   ```sh
+   npm start --prefix backend
+   ```
 
+5. **Test health endpoint:**
+   ```sh
+   curl http://localhost:8080/api/health
+   # Response: {"status":"ok"}
+   ```
+
+### Deployment
+- **Backend:** Push to GitHub and connect to Render. Set environment variables in Render dashboard.
+- **Frontend:** Push to GitHub and connect to Vercel. Set `REACT_APP_API_URL` in Vercel dashboard.
+
+## Folder Structure
 ```
 Echo-aTwitterClone/
 ├── backend/
-│   ├── config/      # Configuration files
-│   ├── controllers/ # Request handlers
-│   ├── models/      # Database schemas (Schema files)
-│   ├── routes/      # API routes
-│   └── index.js     # Entry point
-│
+│   ├── config/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── index.js
+│   └── ...
 ├── frontend/
 │   └── twitterclone/
 │       ├── src/
-│       │   ├── components/  # React components
-│       │   ├── redux/       # State management
-│       │   ├── utils/       # Utilities
-│       │   └── App.js       # Root component
-│       └── public/          # Static files
-│
-└── README.md
+│       ├── public/
+│       ├── build/
+│       └── ...
+├── README.md
+└── ...
 ```
 
-## 🔜 Roadmap
-
-- 📨 Direct Messaging System
-- 🔔 Real-time Notifications
-- 📎 Media Attachments
-- 🧵 Thread Support
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-is licensed under the MIT License.
+## Security & Production Notes
+- All secrets are loaded from environment variables and never committed.
+- CORS is restricted to Vercel and localhost.
+- Cookies are set for cross-origin and secure contexts.
+- Auth endpoints are rate-limited.
+- All API calls have error handling.
 
 ---
 
-Built with 💙 by Minit Jain
+**Made with ❤️ by MinitJain**
