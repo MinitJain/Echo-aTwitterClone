@@ -121,10 +121,7 @@ const LeftSidebar = () => {
               Bookmarks
             </span>
           </Link>
-        </nav>
 
-        {/* Bottom Section */}
-        <div className="mt-8">
           <div
             onClick={logoutHandler}
             className="group flex items-center px-4 py-3.5 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200 ease-in-out active:scale-[0.98] active:bg-red-100 cursor-pointer"
@@ -137,7 +134,7 @@ const LeftSidebar = () => {
               Logout
             </span>
           </div>
-        </div>
+        </nav>
       </div>
     </div>
   );
