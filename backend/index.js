@@ -59,6 +59,15 @@ app.get("/home", (req, res) => {
   });
 });
 
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    time: new Date().toISOString(),
+  });
+});
+
+
 app.listen(process.env.PORT, () => {
   console.log(`Server listen at port ${process.env.PORT}`);
 });
