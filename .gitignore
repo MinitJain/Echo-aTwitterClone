@@ -10,11 +10,12 @@ dist/
 
 # Environment variables
 .env
-.env.*
+.env.production
 backend/.env
 backend/.env.*
 frontend/twitterclone/.env
 frontend/twitterclone/.env.*
+
 
 # IDE files
 .vscode/
