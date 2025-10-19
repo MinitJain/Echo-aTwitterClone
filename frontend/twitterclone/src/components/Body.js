@@ -1,41 +1,19 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./Home";
-import Login from "./Login";
 import Feed from "./Feed";
 import Profile from "./Profile";
 import Bookmarks from "./Bookmarks";
 
 const Body = () => {
-  const appRouter = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-      children: [
-        {
-          path: "/",
-          element: <Feed />,
-        },
-        {
-          path: "/profile/:id",
-          element: <Profile />,
-        },
-        {
-          path: "/bookmarks",
-          element: <Bookmarks />,
-        },
-      ],
-    },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-  ]);
-
   return (
-    <div>
-      <RouterProvider router={appRouter} />
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />}>
+        <Route index element={<Feed />} />
+        <Route path="profile/:id" element={<Profile />} />
+        <Route path="bookmarks" element={<Bookmarks />} />
+      </Route>
+    </Routes>
   );
 };
 

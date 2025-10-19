@@ -1,49 +1,43 @@
+// App.js
 import React, { useEffect, useState } from "react";
-import Body from "./components/Body";
-import { Toaster } from "react-hot-toast";
-import CopilotHelper from "./components/CopilotHelper";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./redux/userSlice";
 import API from "./api/axios";
+import Body from "./components/Body";
 import Login from "./components/Login";
+import { Toaster } from "react-hot-toast";
+import CopilotHelper from "./components/CopilotHelper";
 
 function App() {
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const { user } = useSelector((store) => store.user);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Get user ID from localStorage (stored during login)
         const storedUser = localStorage.getItem("user");
 
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
 
           if (parsedUser?.id) {
-            // Verify the cookie is still valid by fetching profile
             const response = await API.get(
               `/api/v1/user/profile/${parsedUser.id}`
             );
 
             if (response.data.success) {
-              // Cookie is valid, restore user to Redux
               dispatch(getUser(response.data.user));
               console.log("Auth check passed, user restored");
             }
           }
-        } else {
-          console.log("No stored user, will show login");
         }
       } catch (error) {
-        // Cookie invalid, expired, or backend error
         console.log("Auth check failed:", error.message);
         localStorage.removeItem("user");
-        // This is fine - user will see login page
       } finally {
-        setIsInitialized(true);
         setLoading(false);
       }
     };
@@ -51,7 +45,6 @@ function App() {
     checkAuth();
   }, [dispatch]);
 
-  // Show loading screen while checking auth
   if (loading) {
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-gray-100">
@@ -64,12 +57,18 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {/* If no user, show login. Otherwise show main app */}
-      {!user ? <Login /> : <Body />}
+    <>
+      <Routes>
+        {/* If user is logged in, redirect /login to main app */}
+        <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
+
+        {/* Protected main app route */}
+        <Route path="/*" element={user ? <Body /> : <Navigate to="/login" />} />
+      </Routes>
+
       <Toaster />
       <CopilotHelper />
-    </div>
+    </>
   );
 }
 

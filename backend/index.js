@@ -5,23 +5,26 @@ import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute.js";
 import tweetRoute from "./routes/tweetRoute.js";
 import cors from "cors";
+import helmet from "helmet";
 
 dotenv.config({
   path: ".env",
 });
 
-databaseConnection();
 const app = express();
 
-//middlewares (works b/w request and response)
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
-app.use(express.json()); // Parses JSON requests
-app.use(cookieParser()); // Parses cookies
+databaseConnection().catch((err) => {
+  console.error("Database connection failed:", err);
+  process.exit(1);
+});
 
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(helmet());
+
+// CORS setup
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
@@ -30,15 +33,9 @@ const allowedOrigins = [
 ].filter(Boolean);
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) callback(null, true);
+    else callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
 };
@@ -49,16 +46,6 @@ app.use(cors(corsOptions));
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/tweet", tweetRoute);
 
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Backend is live!" });
-});
-
-app.get("/home", (req, res) => {
-  res.status(200).json({
-    message: "coming from backend..",
-  });
-});
-
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -67,6 +54,15 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Backend is live!" });
+});
+
+// Global error handler (important for production)
+app.use((err, req, res, next) => {
+  console.error("Error:", err.message);
+  res.status(500).json({ success: false, message: err.message });
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listen at port ${process.env.PORT}`);
