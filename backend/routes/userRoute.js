@@ -9,10 +9,13 @@ import {
   Register,
   unfollow,
   updateProfile,
+  getLoggedInUser,
 } from "../controllers/userController.js";
 import isAuthenticated from "../config/auth.js";
 
 const router = express.Router();
+
+router.get("/me", isAuthenticated, getLoggedInUser);
 router.post("/register", Register);
 router.post("/login", Login);
 router.get("/logout", logout);

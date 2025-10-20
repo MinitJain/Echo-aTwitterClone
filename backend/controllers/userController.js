@@ -47,11 +47,9 @@ export const Register = async (req, res) => {
     });
 
     // Generate JWT token
-    const token = await jwt.sign(
-      { id: newUser._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    const token = await jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
     // Remove password from user object
     const { password: _, ...userWithoutPassword } = newUser.toObject();
@@ -62,9 +60,9 @@ export const Register = async (req, res) => {
       .status(201)
       .cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 24 * 60 * 60 * 1000,
+        secure: process.env.NODE_ENV === "production", // ✅ required on Vercel
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // ✅ must be "None" (capital N)
+        maxAge: 1 * 24 * 60 * 60 * 1000,
       })
       .json({
         message: "Account created successfully.",
@@ -132,10 +130,10 @@ export const Login = async (req, res) => {
     return res
       .status(200)
       .cookie("token", token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production", // true for HTTPS in production
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // none for cross-origin, lax for local
-  maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // ✅ required on Vercel
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // ✅ must be "None" (capital N)
+        maxAge: 1 * 24 * 60 * 60 * 1000,
       })
       .json({
         message: `Welcome back! ${user.name}`,
@@ -151,14 +149,40 @@ export const Login = async (req, res) => {
   }
 };
 
+export const getLoggedInUser = async (req, res) => {
+  try {
+    // req.user.id comes from auth middleware after verifying JWT
+    const user = await User.findById(req.user).select("-password").lean();
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "User authenticated",
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("getLoggedInUser Error:", error);
+    return res.status(500).json({
+      message: "Server error while fetching user",
+      success: false,
+    });
+  }
+};
+
 export const logout = async (req, res) => {
   // Clear the token cookie
   return res
     .cookie("token", "", {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  expires: new Date(0), // Expire it immediately
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      expires: new Date(0), // Expire it immediately
     })
     .status(200)
     .json({
