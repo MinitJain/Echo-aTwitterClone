@@ -6,6 +6,7 @@ import userRoute from "./routes/userRoute.js";
 import tweetRoute from "./routes/tweetRoute.js";
 import cors from "cors";
 import helmet from "helmet";
+import { Analytics } from "@vercel/analytics/react";
 
 dotenv.config({
   path: ".env",

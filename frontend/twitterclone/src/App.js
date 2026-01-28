@@ -25,7 +25,7 @@ function App() {
 
           if (parsedUser?.id) {
             const response = await API.get(
-              `/api/v1/user/profile/${parsedUser.id}`
+              `/api/v1/user/profile/${parsedUser.id}`,
             );
 
             if (response.data.success) {
