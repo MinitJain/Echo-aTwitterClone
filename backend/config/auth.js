@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 const isAuthenticated = async (req, res, next) => {
   try {
     const { token } = req.cookies;
-    console.log("🔍 Incoming cookies:", req.cookies);
 
     if (!token) {
       console.log("No token found in cookies");
@@ -14,7 +13,7 @@ const isAuthenticated = async (req, res, next) => {
     }
 
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = decoded.id;
     next();
   } catch (error) {
     console.error("JWT Verification Failed:", error.message);
