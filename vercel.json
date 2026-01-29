@@ -1,33 +1,16 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "backend/index.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "frontend/twitterclone/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build",
-        "buildCommand": "npm run build"
-      }
+
+  "functions": {
+    "backend/index.js": {
+      "runtime": "nodejs18.x"
     }
-  ],
-  "routes": [
+  },
+
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "backend/index.js"
-    },
-    {
-      "src": "/static/(.*)",
-      "headers": {
-        "cache-control": "s-maxage=31536000,immutable"
-      }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/twitterclone/build/index.html"
+      "source": "/api/(.*)",
+      "destination": "/backend/index.js"
     }
   ]
 }
