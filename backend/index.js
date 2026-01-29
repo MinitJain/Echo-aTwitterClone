@@ -28,7 +28,6 @@ app.use(helmet());
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
-  "https://echo-frontend-rose.vercel.app",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
