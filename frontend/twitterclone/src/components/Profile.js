@@ -15,14 +15,12 @@ const Profile = () => {
   const dispatch = useDispatch();
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   useGetProfile(id);
-  // If there's an `id` in the URL, show that profile; else show logged-in user's profile
-  const userId = id || user?._id;
 
   const followAndUnfollowHandler = async () => {
     try {
       if (user.following.includes(id)) {
         // Unfollow
-        const res = await API.post(`/api/v1/user/unfollow/${id}`, {
+        await API.post(`/api/v1/user/unfollow/${id}`, {
           id: user?._id,
         });
         dispatch(followingUpdate(id));
@@ -49,9 +47,6 @@ const Profile = () => {
       console.log(error);
     }
   };
-
-  // Fetch profile data
-  useGetProfile(userId);
 
   // Optional loading state
   if (!profile) {

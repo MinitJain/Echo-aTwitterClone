@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect, useCallback } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { TWEET_API_END_POINT } from "../utils/constant";
 import Tweet from "./Tweet";
@@ -9,10 +9,9 @@ const Bookmarks = () => {
   const { user } = useSelector((store) => store.user);
   const [bookmarkedTweets, setBookmarkedTweets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
 
   // Fetch bookmarked tweets
-  const fetchBookmarkedTweets = async () => {
+  const fetchBookmarkedTweets = useCallback(async () => {
     if (!user || !user.bookmarks || user.bookmarks.length === 0) {
       setBookmarkedTweets([]);
       setLoading(false);
@@ -24,7 +23,7 @@ const Bookmarks = () => {
 
       // Filter out any invalid tweet IDs
       const validTweetIds = user.bookmarks.filter(
-        (id) => id && typeof id === "string"
+        (id) => id && typeof id === "string",
       );
 
       if (validTweetIds.length === 0) {
@@ -41,13 +40,13 @@ const Bookmarks = () => {
           .catch((error) => {
             console.warn(`Failed to fetch tweet ${tweetId}:`, error);
             return null; // Return null for failed requests
-          })
+          }),
       );
 
       const responses = await Promise.all(tweetPromises);
       const tweets = responses
         .filter(
-          (response) => response && response.data && response.data.success
+          (response) => response && response.data && response.data.success,
         )
         .map((response) => response.data.tweet);
 
@@ -59,11 +58,11 @@ const Bookmarks = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchBookmarkedTweets();
-  }, [user?.bookmarks]);
+  }, [user?.bookmarks, fetchBookmarkedTweets]);
 
   // Listen for bookmark updates and tweet deletions
   useEffect(() => {
@@ -74,7 +73,7 @@ const Bookmarks = () => {
     const handleTweetDeleted = (event) => {
       const deletedTweetId = event.detail.tweetId;
       setBookmarkedTweets((prevTweets) =>
-        prevTweets.filter((tweet) => tweet._id !== deletedTweetId)
+        prevTweets.filter((tweet) => tweet._id !== deletedTweetId),
       );
     };
 
@@ -86,7 +85,7 @@ const Bookmarks = () => {
       window.removeEventListener("bookmarkUpdated", handleBookmarkUpdate);
       window.removeEventListener("tweetDeleted", handleTweetDeleted);
     };
-  }, []);
+  }, [fetchBookmarkedTweets]);
 
   if (loading) {
     return (

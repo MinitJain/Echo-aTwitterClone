@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { USER_API_END_POINT } from "../utils/constant.js";
 import toast from "react-hot-toast";
@@ -59,7 +59,7 @@ const Login = () => {
               "Content-Type": "application/json",
             },
             withCredentials: true, // ✅ added this line for login too
-          }
+          },
         );
         console.log("Full Login Response:", res);
         console.log("Login API Response:", res.data);
@@ -92,7 +92,7 @@ const Login = () => {
               "Content-Type": "application/json",
             },
             withCredentials: true,
-          }
+          },
         );
 
         if (res.data.success) {
