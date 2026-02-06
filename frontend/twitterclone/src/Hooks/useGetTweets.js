@@ -1,3 +1,11 @@
+import { useEffect, useCallback } from "react";
+import axios from "axios";
+import { TWEET_API_END_POINT } from "../utils/constant";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllTweets } from "../redux/tweetSlice";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 const useGetTweets = (id) => {
   const { refresh, isActive } = useSelector((store) => store.tweet);
   const { user } = useSelector((store) => store.user);
@@ -5,7 +13,7 @@ const useGetTweets = (id) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user === null) return; // wait until redux loads
+    if (user === null) return;
     if (!user) {
       navigate("/login");
     }
@@ -54,3 +62,5 @@ const useGetTweets = (id) => {
     }
   }, [refresh, isActive, fetchTweets, followingTweetHandler, user]);
 };
+
+export default useGetTweets;
