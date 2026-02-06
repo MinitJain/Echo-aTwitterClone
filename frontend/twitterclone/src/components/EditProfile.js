@@ -85,7 +85,7 @@ const EditProfile = ({ isOpen, onClose }) => {
       const response = await axios.put(
         `${USER_API_END_POINT}/update/${user._id}`,
         formData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (response.data.success) {

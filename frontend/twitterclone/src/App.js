@@ -1,5 +1,5 @@
 // App.js
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./redux/userSlice";
@@ -26,7 +26,7 @@ function App() {
 
           if (parsedUser?.id) {
             const response = await API.get(
-              `/api/v1/user/profile/${parsedUser.id}`
+              `/api/v1/user/profile/${parsedUser.id}`,
             );
 
             if (response.data.success) {
