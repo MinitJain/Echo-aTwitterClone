@@ -1,8 +1,7 @@
-// App.js
 import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "./redux/userSlice";
+import { setUser } from "./redux/userSlice";
 import API from "./api/axios";
 import Body from "./components/Body";
 import Login from "./components/Login";
@@ -13,37 +12,22 @@ import { Analytics } from "@vercel/analytics/react";
 function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.user);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const hydrateUser = async () => {
       try {
-        const storedUser = localStorage.getItem("user");
+        const res = await API.get("/api/v1/user/me");
 
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-
-          if (parsedUser?.id) {
-            const response = await API.get(
-              `/api/v1/user/profile/${parsedUser.id}`,
-            );
-
-            if (response.data.success) {
-              dispatch(getUser(response.data.user));
-              console.log("Auth check passed, user restored");
-            }
-          }
-        }
-      } catch (error) {
-        console.log("Auth check failed:", error.message);
-        localStorage.removeItem("user");
+        dispatch(setUser(res.data.user));
+      } catch (err) {
+        console.log("No active session");
       } finally {
         setLoading(false);
       }
     };
 
-    checkAuth();
+    hydrateUser();
   }, [dispatch]);
 
   if (loading) {
@@ -60,10 +44,7 @@ function App() {
   return (
     <>
       <Routes>
-        {/* If user is logged in, redirect /login to main app */}
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
-
-        {/* Protected main app route */}
         <Route path="/*" element={user ? <Body /> : <Navigate to="/login" />} />
       </Routes>
 

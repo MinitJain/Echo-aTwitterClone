@@ -4,7 +4,7 @@ import { USER_API_END_POINT } from "../utils/constant.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { getUser } from "../redux/userSlice.js";
+import { setUser } from "../redux/userSlice.js";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -65,7 +65,7 @@ const Login = () => {
         console.log("Login API Response:", res.data);
 
         if (res.data.success) {
-          dispatch(getUser(res?.data?.user));
+          dispatch(setUser(res?.data?.user));
           localStorage.setItem("user", JSON.stringify(res?.data?.user));
           navigate("/");
 
@@ -97,7 +97,7 @@ const Login = () => {
 
         if (res.data.success) {
           // Automatically log in after signup
-          dispatch(getUser(res?.data?.user));
+          dispatch(setUser(res?.data?.user));
           localStorage.setItem("user", JSON.stringify(res?.data?.user));
           navigate("/");
           toast.success(res.data.message);

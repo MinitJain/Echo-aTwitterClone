@@ -3,6 +3,7 @@ import {
   bookmark,
   follow,
   getOtherUserProfile,
+  getMe,
   GetUserProfile,
   Login,
   logout,
@@ -17,6 +18,7 @@ router.post("/register", Register);
 router.post("/login", Login);
 router.get("/logout", logout);
 router.put("/bookmark/:id", isAuthenticated, bookmark);
+router.get("/me", isAuthenticated, getMe);
 router.route("/profile/:id").get(isAuthenticated, GetUserProfile);
 router.put("/update/:id", isAuthenticated, updateProfile);
 router.get("/otherusers/:id", isAuthenticated, getOtherUserProfile);
