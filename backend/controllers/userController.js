@@ -3,12 +3,10 @@ import { Tweet } from "../models/tweetSchema.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Register Controller
 export const Register = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
 
-    // Basic field validation
     if (!name || !username || !email || !password) {
       console.log("Missing Fields:", name, username, email, password);
       return res.status(400).json({
@@ -17,7 +15,6 @@ export const Register = async (req, res) => {
       });
     }
 
-    // Check if email already exists
     const existingUser = await User.findOne({ email }).lean();
     if (existingUser) {
       return res.status(400).json({
@@ -26,7 +23,6 @@ export const Register = async (req, res) => {
       });
     }
 
-    // Check if username already exists
     const existingUsername = await User.findOne({ username }).lean();
     if (existingUsername) {
       return res.status(400).json({
@@ -35,10 +31,8 @@ export const Register = async (req, res) => {
       });
     }
 
-    // Hash the password securely
     const hashedPassword = await bcryptjs.hash(password, 10);
 
-    // Create and save the new user
     const newUser = await User.create({
       name,
       username,
@@ -46,12 +40,9 @@ export const Register = async (req, res) => {
       password: hashedPassword,
     });
 
-    // Generate JWT token
-    const token = await jwt.sign(
-      { id: newUser._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    const token = await jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
     // Remove password from user object
     const { password: _, ...userWithoutPassword } = newUser.toObject();
@@ -80,12 +71,10 @@ export const Register = async (req, res) => {
   }
 };
 
-// Login Controller
 export const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Basic field validation
     if (!email || !password) {
       return res.status(400).json({
         message: "Email and password are required.",
@@ -93,7 +82,6 @@ export const Login = async (req, res) => {
       });
     }
 
-    // Find user by email
     const existingUser = await User.findOne({ email }).lean();
     if (!existingUser) {
       return res.status(400).json({
@@ -102,10 +90,9 @@ export const Login = async (req, res) => {
       });
     }
 
-    // Verify password
     const isPasswordValid = await bcryptjs.compare(
       password,
-      existingUser.password
+      existingUser.password,
     );
     if (!isPasswordValid) {
       return res.status(400).json({
@@ -114,11 +101,10 @@ export const Login = async (req, res) => {
       });
     }
 
-    // Generate JWT token
     const token = await jwt.sign(
       { id: existingUser._id },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     const { password: _, ...userWithoutPassword } = existingUser;
@@ -132,10 +118,10 @@ export const Login = async (req, res) => {
     return res
       .status(200)
       .cookie("token", token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production", // true for HTTPS in production
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // none for cross-origin, lax for local
-  maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // true for HTTPS in production
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // none for cross-origin, lax for local
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
       })
       .json({
         message: `Welcome back! ${user.name}`,
@@ -155,10 +141,10 @@ export const logout = async (req, res) => {
   // Clear the token cookie
   return res
     .cookie("token", "", {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  expires: new Date(0), // Expire it immediately
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      expires: new Date(0), // Expire it immediately
     })
     .status(200)
     .json({
@@ -169,7 +155,8 @@ export const logout = async (req, res) => {
 
 export const bookmark = async (req, res) => {
   try {
-    const LoggedInUserId = req.body.id;
+    const LoggedInUserId = req.user;
+
     const tweetId = req.params.id;
 
     const foundUser = await User.findById(LoggedInUserId);
@@ -229,6 +216,29 @@ export const GetUserProfile = async (req, res) => {
     });
   }
 };
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("getMe Error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
 
 export const getOtherUserProfile = async (req, res) => {
   try {
@@ -254,7 +264,7 @@ export const getOtherUserProfile = async (req, res) => {
 
 export const follow = async (req, res) => {
   try {
-    const LoggedInUserId = req.body.id;
+    const LoggedInUserId = req.user;
     const userIdToFollow = req.params.id;
 
     const loggedInUser = await User.findById(LoggedInUserId);
@@ -294,7 +304,7 @@ export const follow = async (req, res) => {
 
 export const unfollow = async (req, res) => {
   try {
-    const LoggedInUserId = req.body.id;
+    const LoggedInUserId = req.user;
     const userIdToFollow = req.params.id;
 
     const loggedInUser = await User.findById(LoggedInUserId);
@@ -401,7 +411,7 @@ export const updateProfile = async (req, res) => {
         profileImageUrl: profileImageUrl || "",
         bannerUrl: bannerUrl || "",
       },
-      { new: true, select: "-password" }
+      { new: true, select: "-password" },
     );
 
     if (!updatedUser) {
